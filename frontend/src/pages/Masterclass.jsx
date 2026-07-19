@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CallbackForm from '../components/CallbackForm';
+import { fallbackWorkshops } from '../data/fallbackContent';
 
 export default function Masterclass() {
   const [items, setItems] = useState([]);
@@ -7,8 +8,11 @@ export default function Masterclass() {
   useEffect(() => {
     fetch('/api/masterclasses')
       .then((r) => r.json())
-      .then((d) => { if (Array.isArray(d)) setItems(d); })
-      .catch(() => {});
+      .then((d) => {
+        if (Array.isArray(d) && d.length > 0) setItems(d);
+        else setItems(fallbackWorkshops);
+      })
+      .catch(() => setItems(fallbackWorkshops));
   }, []);
 
   return (

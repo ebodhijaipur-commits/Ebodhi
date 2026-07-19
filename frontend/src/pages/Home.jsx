@@ -9,6 +9,7 @@ import HeroBackground from '../components/HeroVisuals';
 import CountUp from '../components/CountUp';
 import StoriesSlider from '../components/StoriesSlider';
 import { fallbackCourses } from '../data/fallbackCourses';
+import { fallbackTestimonials, fallbackWorkshops } from '../data/fallbackContent';
 
 const HERO_TITLE = 'Give your career a practical, GenAI-ready edge';
 const HERO_LEAD = 'Excel with expert guidance — Full Stack, Data Science with AI/ML, Digital Marketing, Data Analytics, and App Development with capstones and mentor support.';
@@ -131,8 +132,20 @@ export default function Home() {
         else setCourses(fallbackCourses);
       })
       .catch(() => setCourses(fallbackCourses));
-    fetch('/api/testimonials').then((r) => r.json()).then((d) => { if (Array.isArray(d)) setTestimonials(d); }).catch(() => {});
-    fetch('/api/masterclasses').then((r) => r.json()).then((d) => { if (Array.isArray(d)) setWorkshops(d); }).catch(() => {});
+    fetch('/api/testimonials')
+      .then((r) => r.json())
+      .then((d) => {
+        if (Array.isArray(d) && d.length > 0) setTestimonials(d);
+        else setTestimonials(fallbackTestimonials);
+      })
+      .catch(() => setTestimonials(fallbackTestimonials));
+    fetch('/api/masterclasses')
+      .then((r) => r.json())
+      .then((d) => {
+        if (Array.isArray(d) && d.length > 0) setWorkshops(d);
+        else setWorkshops(fallbackWorkshops);
+      })
+      .catch(() => setWorkshops(fallbackWorkshops));
     fetch('/api/stats').then((r) => r.json()).then((d) => { if (Array.isArray(d)) setStats(d); }).catch(() => {});
   }, []);
 

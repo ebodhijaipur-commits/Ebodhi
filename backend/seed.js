@@ -355,19 +355,121 @@ const seedDatabase = async ({ closeConnection = true, exitProcess = true } = {})
   }
 };
 
-/** Seed only when the courses collection is empty (safe for production boot). */
+const workshopSeedData = () => {
+  const soon = new Date();
+  soon.setDate(soon.getDate() + 7);
+  const later = new Date();
+  later.setDate(later.getDate() + 14);
+  return [
+    {
+      title: 'Build & Deploy a Mini Full Stack App',
+      domain: 'Full Stack',
+      date: soon,
+      mentor: 'Ananya Kapoor',
+      seats: 80,
+      description: 'Weekend workshop: React UI + Express API + deploy checklist for internship portfolios.',
+      imageUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&auto=format&fit=crop&q=60'
+    },
+    {
+      title: 'Data Analytics Dashboard Sprint',
+      domain: 'Data Analytics',
+      date: later,
+      mentor: 'Vikram Singh',
+      seats: 60,
+      description: 'Hands-on workshop: Excel/SQL cleanup to a Power BI style dashboard for a business case.',
+      imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=60'
+    }
+  ];
+};
+
+/** Fill any missing content collections without wiping existing data. */
 const ensureSeeded = async () => {
   if (mongoose.connection.readyState === 0) {
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ebodhi');
   }
-  const count = await Course.countDocuments();
-  if (count > 0) {
-    console.log(`Database already has ${count} courses — skip auto-seed`);
-    return false;
+
+  const [courses, testimonials, workshops, mentors, alumni, resources, stats, settings, admins] = await Promise.all([
+    Course.countDocuments(),
+    Testimonial.countDocuments(),
+    Masterclass.countDocuments(),
+    Mentor.countDocuments(),
+    Alumni.countDocuments(),
+    Resource.countDocuments(),
+    SiteStat.countDocuments(),
+    SiteSettings.countDocuments(),
+    User.countDocuments({ role: 'admin' })
+  ]);
+
+  // Fully empty DB → run the full seed once
+  if (courses === 0 && testimonials === 0 && workshops === 0) {
+    console.log('Empty content database — running full auto-seed…');
+    await seedDatabase({ closeConnection: false, exitProcess: false });
+    return true;
   }
-  console.log('No courses found — auto-seeding defaults…');
-  await seedDatabase({ closeConnection: false, exitProcess: false });
-  return true;
+
+  let filled = false;
+
+  if (courses === 0) {
+    await Course.insertMany(coursesData);
+    console.log('Auto-seeded courses');
+    filled = true;
+  }
+  if (testimonials === 0) {
+    await Testimonial.insertMany(testimonialsData);
+    console.log('Auto-seeded testimonials');
+    filled = true;
+  }
+  if (workshops === 0) {
+    await Masterclass.insertMany(workshopSeedData());
+    console.log('Auto-seeded workshops');
+    filled = true;
+  }
+  if (mentors === 0) {
+    await Mentor.insertMany(mentorsData);
+    console.log('Auto-seeded mentors');
+    filled = true;
+  }
+  if (alumni === 0) {
+    await Alumni.insertMany(alumniData);
+    console.log('Auto-seeded alumni');
+    filled = true;
+  }
+  if (resources === 0) {
+    await Resource.insertMany(resourcesData);
+    console.log('Auto-seeded resources');
+    filled = true;
+  }
+  if (stats === 0) {
+    await SiteStat.insertMany(statsData);
+    console.log('Auto-seeded stats');
+    filled = true;
+  }
+  if (settings === 0) {
+    await SiteSettings.create({
+      key: 'main',
+      logoUrl: '',
+      phone: '+91-141-404-5555',
+      instagram: 'https://www.instagram.com/',
+      facebook: 'https://www.facebook.com/',
+      linkedin: 'https://www.linkedin.com/'
+    });
+    console.log('Auto-seeded site settings');
+    filled = true;
+  }
+  if (admins === 0) {
+    await User.create({
+      role: 'admin',
+      username: 'admin',
+      name: 'eBodhi Admin',
+      email: 'admin@ebodhi.com',
+      password: 'admin123'
+    });
+    console.log('Auto-seeded admin user');
+    filled = true;
+  }
+
+  if (!filled) console.log('Content collections already populated — skip auto-seed');
+  return filled;
 };
 
 if (require.main === module) {
