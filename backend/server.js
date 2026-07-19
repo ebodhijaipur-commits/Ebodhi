@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const { ensureSeeded } = require('./seed');
 
 const authRoutes = require('./routes/auth');
 const studentAuthRoutes = require('./routes/studentAuth');
@@ -17,8 +18,6 @@ const statsRoutes = require('./routes/stats');
 const settingsRoutes = require('./routes/settings');
 
 const app = express();
-
-connectDB();
 
 app.use(cors());
 app.use(express.json());
@@ -42,6 +41,16 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const start = async () => {
+  await connectDB();
+  try {
+    await ensureSeeded();
+  } catch (err) {
+    console.error('Auto-seed warning:', err.message);
+  }
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+start();

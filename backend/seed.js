@@ -253,10 +253,12 @@ const statsData = [
   { key: 'highest_package', label: 'Top Package', value: '₹12 LPA', description: 'Highest among recent eBodhi cohorts' }
 ];
 
-const seedDatabase = async () => {
+const seedDatabase = async ({ closeConnection = true, exitProcess = true } = {}) => {
   try {
-    console.log('Connecting to database...');
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ebodhi');
+    if (mongoose.connection.readyState === 0) {
+      console.log('Connecting to database...');
+      await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ebodhi');
+    }
     console.log('Connected. Clearing collections...');
 
     await Promise.all([
@@ -344,12 +346,32 @@ const seedDatabase = async () => {
     console.log('Seed complete.');
     console.log('Admin: admin / admin123');
     console.log('Student: student@ebodhi.com / student123');
-    await mongoose.connection.close();
-    process.exit(0);
+    if (closeConnection) await mongoose.connection.close();
+    if (exitProcess) process.exit(0);
   } catch (error) {
     console.error('Seeding failed:', error);
-    process.exit(1);
+    if (exitProcess) process.exit(1);
+    throw error;
   }
 };
 
-seedDatabase();
+/** Seed only when the courses collection is empty (safe for production boot). */
+const ensureSeeded = async () => {
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ebodhi');
+  }
+  const count = await Course.countDocuments();
+  if (count > 0) {
+    console.log(`Database already has ${count} courses — skip auto-seed`);
+    return false;
+  }
+  console.log('No courses found — auto-seeding defaults…');
+  await seedDatabase({ closeConnection: false, exitProcess: false });
+  return true;
+};
+
+if (require.main === module) {
+  seedDatabase();
+}
+
+module.exports = { seedDatabase, ensureSeeded };

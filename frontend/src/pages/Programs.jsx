@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProgramCard from '../components/ProgramCard';
+import { fallbackCourses } from '../data/fallbackCourses';
 
 export default function Programs() {
   const [courses, setCourses] = useState([]);
@@ -11,8 +12,11 @@ export default function Programs() {
   useEffect(() => {
     fetch('/api/courses')
       .then((r) => r.json())
-      .then((d) => { if (Array.isArray(d)) setCourses(d); })
-      .catch(() => {});
+      .then((d) => {
+        if (Array.isArray(d) && d.length > 0) setCourses(d);
+        else setCourses(fallbackCourses);
+      })
+      .catch(() => setCourses(fallbackCourses));
   }, []);
 
   const categories = useMemo(() => ['All', ...new Set(courses.map((c) => c.category))], [courses]);
