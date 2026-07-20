@@ -37,7 +37,17 @@ router.get('/', async (req, res) => {
 // @access  Public
 router.get('/:slug', async (req, res) => {
   try {
-    const course = await Course.findOne({ slug: req.params.slug });
+    const raw = req.params.slug;
+    const aliases = {
+      'data-science-with-aiml': 'data-science-with-ai-ml',
+      'app-development-androidios': 'app-development-android-ios'
+    };
+    const slug = aliases[raw] || raw;
+
+    let course = await Course.findOne({ slug });
+    if (!course) {
+      course = await Course.findOne({ slug: raw });
+    }
     if (!course) {
       return res.status(404).json({ message: 'Course not found' });
     }

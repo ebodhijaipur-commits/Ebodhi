@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { CheckCircle, Clock, IndianRupee } from 'lucide-react';
 import CallbackForm from '../components/CallbackForm';
+import { fallbackCourses, getFallbackCourse } from '../data/fallbackCourses';
 
 export default function CourseView() {
   const { slug } = useParams();
@@ -10,14 +11,50 @@ export default function CourseView() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
+    let cancelled = false;
+    setCourse(null);
+    setError('');
+
+    const applyFallback = () => {
+      const local = getFallbackCourse(slug);
+      if (local) {
+        if (!cancelled) {
+          setCourse(local);
+          setError('');
+        }
+        return true;
+      }
+      return false;
+    };
+
     fetch(`/api/courses/${slug}`)
       .then(async (r) => {
-        const data = await r.json();
+        const data = await r.json().catch(() => ({}));
         if (!r.ok) throw new Error(data.message || 'Not found');
-        setCourse(data);
+        if (!cancelled) {
+          setCourse(data);
+          setError('');
+        }
       })
-      .catch((e) => setError(e.message));
-    fetch('/api/courses').then((r) => r.json()).then((d) => { if (Array.isArray(d)) setCourses(d); }).catch(() => {});
+      .catch(() => {
+        if (!applyFallback() && !cancelled) {
+          setError('This program could not be loaded. Please try again or browse all courses.');
+        }
+      });
+
+    fetch('/api/courses')
+      .then((r) => r.json())
+      .then((d) => {
+        if (!cancelled) {
+          if (Array.isArray(d) && d.length > 0) setCourses(d);
+          else setCourses(fallbackCourses);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setCourses(fallbackCourses);
+      });
+
+    return () => { cancelled = true; };
   }, [slug]);
 
   if (error) {
@@ -33,6 +70,10 @@ export default function CourseView() {
   if (!course) {
     return <div className="container section"><p>Loading program…</p></div>;
   }
+
+  const formCourses = courses.length
+    ? courses.filter((c) => c._id === course._id || c.slug === course.slug)
+    : [course];
 
   return (
     <div>
@@ -64,6 +105,9 @@ export default function CourseView() {
               </ul>
             </details>
           ))}
+          {(!course.syllabus || course.syllabus.length === 0) && (
+            <p style={{ color: 'var(--muted)' }}>Curriculum details will appear here once published.</p>
+          )}
 
           {course.highlights?.length > 0 && (
             <>
@@ -84,7 +128,7 @@ export default function CourseView() {
           <p style={{ color: 'var(--muted)', fontSize: '.92rem', marginBottom: 16 }}>
             Share your college year or career goal — we&apos;ll recommend the right batch or internship track.
           </p>
-          <CallbackForm courses={courses.filter((c) => c._id === course._id)} />
+          <CallbackForm courses={formCourses} defaultCourseSlug={course.slug} />
           <Link to="/register" className="btn btn-secondary" style={{ width: '100%', marginTop: 12 }}>
             Create Student Account
           </Link>
