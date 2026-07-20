@@ -15,7 +15,7 @@ const sampleCourses = [
     _id: '2',
     title: 'Data Science with AI/ML',
     category: 'Data Science',
-    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&auto=format&fit=crop',
     description: 'EDA, machine learning, and AI projects for internship-ready portfolios.',
     price: '₹25,000',
     duration: '12–14 Weeks'
@@ -33,7 +33,7 @@ const sampleCourses = [
     _id: '4',
     title: 'Data Analytics',
     category: 'Data Analytics',
-    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&auto=format&fit=crop',
     description: 'Excel, SQL, and dashboard storytelling for business decisions.',
     price: '₹25,000',
     duration: '12–14 Weeks'

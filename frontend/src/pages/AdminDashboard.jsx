@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Inbox, BookOpen, GraduationCap, CalendarDays, Users, Award,
   FolderOpen, MessageSquareQuote, Settings, LogOut, ExternalLink, Search,
-  RefreshCw, Plus, Menu, X, Trash2, UserPlus, Pencil
+  RefreshCw, Plus, Menu, X, Trash2, UserPlus, Pencil, Layers, ClipboardCheck
 } from 'lucide-react';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import defaultLogo from '../assets/logo.svg';
@@ -15,6 +15,7 @@ const ENROLL_STATUSES = ['active', 'completed', 'revoked'];
 const NAV = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
   { id: 'leads', label: 'Leads', icon: Inbox },
+  { id: 'applications', label: 'LMS Applications', icon: ClipboardCheck },
   { id: 'courses', label: 'Courses', icon: BookOpen },
   { id: 'enrollments', label: 'Enrollments', icon: GraduationCap },
   { id: 'masterclasses', label: 'Workshops', icon: CalendarDays },
@@ -59,9 +60,11 @@ export default function AdminDashboard() {
   const [adminName, setAdminName] = useState('Admin');
 
   const [inquiries, setInquiries] = useState([]);
+  const [applications, setApplications] = useState([]);
   const [courses, setCourses] = useState([]);
   const [students, setStudents] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
+  const [appFilter, setAppFilter] = useState('pending');
   const [masterclasses, setMasterclasses] = useState([]);
   const [mentors, setMentors] = useState([]);
   const [alumni, setAlumni] = useState([]);
@@ -89,8 +92,9 @@ export default function AdminDashboard() {
   const load = async (authToken = token) => {
     const h = { Authorization: `Bearer ${authToken}` };
     try {
-      const [i, c, s, e, m, me, a, r, t, settings] = await Promise.all([
+      const [i, apps, c, s, e, m, me, a, r, t, settings] = await Promise.all([
         fetch('/api/inquiries', { headers: h }).then((x) => x.json()),
+        fetch('/api/applications', { headers: h }).then((x) => x.json()),
         fetch('/api/courses').then((x) => x.json()),
         fetch('/api/enrollments/students/list', { headers: h }).then((x) => x.json()),
         fetch('/api/enrollments', { headers: h }).then((x) => x.json()),
@@ -102,6 +106,7 @@ export default function AdminDashboard() {
         fetch('/api/settings').then((x) => x.json())
       ]);
       if (Array.isArray(i)) setInquiries(i);
+      if (Array.isArray(apps)) setApplications(apps);
       if (Array.isArray(c)) setCourses(c);
       if (Array.isArray(s)) setStudents(s);
       if (Array.isArray(e)) setEnrollments(e);
@@ -153,10 +158,15 @@ export default function AdminDashboard() {
 
   const pendingLeads = leadStats.Pending || 0;
   const activeEnrollments = enrollments.filter((e) => e.status !== 'revoked').length;
+  const pendingApps = applications.filter((a) => a.status === 'pending').length;
 
   const filteredLeads = inquiries.filter((l) => {
     const statusOk = leadFilter === 'All' || l.status === leadFilter;
     return statusOk && match(l.name, l.email, l.phone, l.message, l.status);
+  });
+  const filteredApps = applications.filter((a) => {
+    const statusOk = appFilter === 'all' || a.status === appFilter;
+    return statusOk && match(a.student?.name, a.student?.email, a.course?.title, a.status);
   });
   const filteredCourses = courses.filter((c) => match(c.title, c.category, c.mode, c.duration));
   const filteredStudents = students.filter((s) => match(s.name, s.email, s.phone));
@@ -255,6 +265,33 @@ export default function AdminDashboard() {
     if (!window.confirm('Revoke enrollment?')) return;
     await fetch(`/api/enrollments/${id}`, { method: 'DELETE', headers: headers() });
     flash('Enrollment revoked');
+    load();
+  };
+
+  const approveApplication = async (id) => {
+    const res = await fetch(`/api/applications/${id}/approve`, {
+      method: 'POST', headers: headers(), body: '{}'
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      flash(data.message || 'Approve failed', true);
+      return;
+    }
+    flash('Approved — LMS unlocked for student');
+    load();
+  };
+
+  const rejectApplication = async (id) => {
+    const notes = window.prompt('Optional note for the student (rejection reason):') || '';
+    const res = await fetch(`/api/applications/${id}/reject`, {
+      method: 'POST', headers: headers(), body: JSON.stringify({ adminNotes: notes })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      flash(data.message || 'Reject failed', true);
+      return;
+    }
+    flash('Application rejected');
     load();
   };
 
@@ -518,10 +555,11 @@ export default function AdminDashboard() {
         {NAV.map((item) => {
           const Icon = item.icon;
           const count = item.id === 'leads' ? pendingLeads
-            : item.id === 'courses' ? courses.length
-              : item.id === 'enrollments' ? activeEnrollments
-                : item.id === 'masterclasses' ? masterclasses.length
-                  : null;
+            : item.id === 'applications' ? pendingApps
+              : item.id === 'courses' ? courses.length
+                : item.id === 'enrollments' ? activeEnrollments
+                  : item.id === 'masterclasses' ? masterclasses.length
+                    : null;
           return (
             <button
               key={item.id}
@@ -535,6 +573,10 @@ export default function AdminDashboard() {
             </button>
           );
         })}
+        <Link to="/admin/lms" className="admin-nav-btn">
+          <Layers size={18} />
+          LMS
+        </Link>
 
         <div className="admin-side-foot">
           <Link to="/" className="admin-nav-btn"><ExternalLink size={18} /> View site</Link>
@@ -569,7 +611,7 @@ export default function AdminDashboard() {
             <button type="button" className="admin-icon-btn" onClick={() => load()} aria-label="Refresh" title="Refresh">
               <RefreshCw size={16} />
             </button>
-            {['courses', 'enrollments', 'masterclasses', 'mentors', 'alumni', 'resources', 'testimonials'].includes(tab) && (
+            {['courses', 'enrollments', 'applications', 'masterclasses', 'mentors', 'alumni', 'resources', 'testimonials'].includes(tab) && (
               <button type="button" className="btn btn-primary btn-sm" onClick={openAdd}>
                 <Plus size={16} /> Add
               </button>
@@ -586,10 +628,10 @@ export default function AdminDashboard() {
                   <strong>{pendingLeads}</strong>
                   <span>Pending leads</span>
                 </article>
-                <article className="admin-kpi" onClick={() => goTab('courses')}>
-                  <div className="admin-kpi-top"><div className="admin-kpi-icon"><BookOpen size={18} /></div></div>
-                  <strong>{courses.length}</strong>
-                  <span>Active courses</span>
+                <article className="admin-kpi" onClick={() => goTab('applications')}>
+                  <div className="admin-kpi-top"><div className="admin-kpi-icon"><ClipboardCheck size={18} /></div></div>
+                  <strong>{pendingApps}</strong>
+                  <span>LMS applications</span>
                 </article>
                 <article className="admin-kpi green" onClick={() => goTab('enrollments')}>
                   <div className="admin-kpi-top"><div className="admin-kpi-icon"><GraduationCap size={18} /></div></div>
@@ -638,9 +680,17 @@ export default function AdminDashboard() {
                       <strong>Assign enrollment</strong>
                       <span>Link student to a course</span>
                     </button>
+                    <Link to="/admin/lms" className="admin-quick">
+                      <strong>Open LMS</strong>
+                      <span>Edit chapters, quizzes &amp; progress</span>
+                    </Link>
                     <button type="button" className="admin-quick" onClick={() => { goTab('masterclasses'); setEditingId(null); setMcForm(emptyMc); setDrawer('workshop'); }}>
                       <strong>Schedule workshop</strong>
                       <span>Create a live session</span>
+                    </button>
+                    <button type="button" className="admin-quick" onClick={() => goTab('applications')}>
+                      <strong>LMS applications</strong>
+                      <span>{pendingApps} waiting for approval</span>
                     </button>
                     <button type="button" className="admin-quick" onClick={() => goTab('leads')}>
                       <strong>Review leads</strong>
@@ -712,6 +762,70 @@ export default function AdminDashboard() {
                           <button type="button" className="btn btn-secondary btn-sm" onClick={() => deleteLead(lead._id)}>
                             <Trash2 size={14} /> Delete
                           </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+
+          {tab === 'applications' && (
+            <>
+              <div className="admin-toolbar">
+                <div className="admin-filters">
+                  {['pending', 'approved', 'rejected', 'all'].map((s) => (
+                    <button key={s} type="button" className={`admin-chip ${appFilter === s ? 'active' : ''}`} onClick={() => setAppFilter(s)}>
+                      {s === 'all' ? 'All' : s.charAt(0).toUpperCase() + s.slice(1)}
+                      {s === 'pending' ? ` (${pendingApps})` : ''}
+                    </button>
+                  ))}
+                </div>
+                <span style={{ color: 'var(--muted)', fontSize: '.88rem' }}>{filteredApps.length} shown</span>
+              </div>
+              <p style={{ color: 'var(--muted)', marginBottom: 12 }}>
+                Approving creates an enrollment so the student can open the LMS classroom from their portal.
+              </p>
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead>
+                    <tr><th>Student</th><th>Course</th><th>Applied</th><th>Status</th><th>Actions</th></tr>
+                  </thead>
+                  <tbody>
+                    {filteredApps.length === 0 && (
+                      <tr><td colSpan={5} className="admin-empty">No applications yet</td></tr>
+                    )}
+                    {filteredApps.map((app) => (
+                      <tr key={app._id}>
+                        <td>
+                          <strong>{app.student?.name || '—'}</strong>
+                          <div style={{ color: 'var(--muted)', fontSize: '.85rem' }}>{app.student?.email}</div>
+                          {app.student?.phone && (
+                            <div style={{ color: 'var(--muted)', fontSize: '.82rem' }}>{app.student.phone}</div>
+                          )}
+                        </td>
+                        <td>{app.course?.title}<div style={{ color: 'var(--muted)', fontSize: '.82rem' }}>{app.course?.category}</div></td>
+                        <td style={{ whiteSpace: 'nowrap', fontSize: '.85rem' }}>
+                          {app.createdAt ? new Date(app.createdAt).toLocaleString() : '—'}
+                        </td>
+                        <td style={{ textTransform: 'capitalize' }}>{app.status}</td>
+                        <td style={{ whiteSpace: 'nowrap' }}>
+                          {app.status === 'pending' && (
+                            <>
+                              <button type="button" className="btn btn-primary btn-sm" onClick={() => approveApplication(app._id)}>
+                                Approve
+                              </button>{' '}
+                              <button type="button" className="btn btn-secondary btn-sm" onClick={() => rejectApplication(app._id)}>
+                                Reject
+                              </button>
+                            </>
+                          )}
+                          {app.status !== 'pending' && (
+                            <span style={{ color: 'var(--muted)', fontSize: '.85rem' }}>
+                              {app.adminNotes || '—'}
+                            </span>
+                          )}
                         </td>
                       </tr>
                     ))}

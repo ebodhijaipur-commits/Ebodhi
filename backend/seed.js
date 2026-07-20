@@ -10,6 +10,31 @@ const Resource = require('./models/Resource');
 const SiteStat = require('./models/SiteStat');
 const SiteSettings = require('./models/SiteSettings');
 const Enrollment = require('./models/Enrollment');
+const { LMS_BY_SLUG } = require('./data/lmsCatalog');
+
+const ensureCourseLms = async (slug) => {
+  const pack = LMS_BY_SLUG[slug];
+  if (!pack) return false;
+  const course = await Course.findOne({ slug });
+  if (!course) return false;
+  const count = Array.isArray(course.chapters) ? course.chapters.length : 0;
+  const version = course.lmsVersion || 0;
+  if (count > 0 && version === pack.version) return false;
+  course.chapters = pack.chapters;
+  course.lmsVersion = pack.version;
+  await course.save();
+  console.log(`LMS synced ${slug} v${pack.version} (${pack.chapters.length} chapters)`);
+  return true;
+};
+
+const ensureAllLms = async () => {
+  let any = false;
+  for (const slug of Object.keys(LMS_BY_SLUG)) {
+    // eslint-disable-next-line no-await-in-loop
+    if (await ensureCourseLms(slug)) any = true;
+  }
+  return any;
+};
 
 const coursesData = [
   {
@@ -39,7 +64,7 @@ const coursesData = [
     description: 'From EDA and visualization to supervised ML and intro GenAI analytics. Build portfolio projects that mirror industry data problems.',
     price: 25000,
     duration: '12–14 Weeks',
-    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=60',
+    imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop&q=60',
     featured: true,
     mode: 'both',
     avgSalary: '₹6–14 LPA',
@@ -77,7 +102,7 @@ const coursesData = [
     description: 'Excel, SQL, Power BI / Tableau, and business storytelling — turn raw data into decisions with internship-ready dashboards.',
     price: 25000,
     duration: '12–14 Weeks',
-    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=60',
+    imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=60',
     featured: true,
     mode: 'both',
     avgSalary: '₹4–9 LPA',
@@ -293,6 +318,7 @@ const seedDatabase = async ({ closeConnection = true, exitProcess = true } = {})
     await student.save();
 
     const courses = await Course.insertMany(coursesData);
+    await ensureAllLms();
     await Testimonial.insertMany(testimonialsData);
     await Mentor.insertMany(mentorsData);
     await Alumni.insertMany(alumniData);
@@ -468,6 +494,13 @@ const ensureSeeded = async () => {
     filled = true;
   }
 
+  try {
+    const lms = await ensureAllLms();
+    if (lms) filled = true;
+  } catch (err) {
+    console.error('LMS seed warning:', err.message);
+  }
+
   if (!filled) console.log('Content collections already populated — skip auto-seed');
   return filled;
 };
@@ -476,4 +509,4 @@ if (require.main === module) {
   seedDatabase();
 }
 
-module.exports = { seedDatabase, ensureSeeded };
+module.exports = { seedDatabase, ensureSeeded, ensureAllLms, ensureCourseLms };

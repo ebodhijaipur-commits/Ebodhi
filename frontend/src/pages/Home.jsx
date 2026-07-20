@@ -8,6 +8,7 @@ import CallbackForm from '../components/CallbackForm';
 import HeroBackground from '../components/HeroVisuals';
 import CountUp from '../components/CountUp';
 import StoriesSlider from '../components/StoriesSlider';
+import Reveal from '../components/Reveal';
 import { fallbackCourses } from '../data/fallbackCourses';
 import { fallbackTestimonials, fallbackWorkshops } from '../data/fallbackContent';
 
@@ -92,11 +93,10 @@ const whyUs = [
 ];
 
 export default function Home() {
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState(fallbackCourses);
   const [testimonials, setTestimonials] = useState([]);
   const [workshops, setWorkshops] = useState([]);
   const [stats, setStats] = useState([]);
-  const [activeTab, setActiveTab] = useState('All');
   const [live, setLive] = useState(false);
   const [pulse, setPulse] = useState(0);
   const pulseTimer = useRef(null);
@@ -125,13 +125,19 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    fetch('/api/courses')
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+
+    fetch('/api/courses', { signal: controller.signal })
       .then((r) => r.json())
       .then((d) => {
         if (Array.isArray(d) && d.length > 0) setCourses(d);
-        else setCourses(fallbackCourses);
       })
-      .catch(() => setCourses(fallbackCourses));
+      .catch(() => {
+        /* keep fallback catalog */
+      })
+      .finally(() => clearTimeout(timer));
+
     fetch('/api/testimonials')
       .then((r) => r.json())
       .then((d) => {
@@ -147,12 +153,17 @@ export default function Home() {
       })
       .catch(() => setWorkshops(fallbackWorkshops));
     fetch('/api/stats').then((r) => r.json()).then((d) => { if (Array.isArray(d)) setStats(d); }).catch(() => {});
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, []);
 
-  const categories = ['All', ...new Set(courses.map((c) => c.category))];
-  const filtered = activeTab === 'All'
-    ? courses.filter((c) => c.featured || !c.isFree)
-    : courses.filter((c) => c.category === activeTab);
+  const homeShowcaseCategories = ['Data Science', 'Full Stack', 'App Development'];
+  const showcaseCourses = homeShowcaseCategories
+    .map((cat) => courses.find((c) => c.category === cat))
+    .filter(Boolean);
   const impactIcons = {
     students_trained: Users,
     internships: Briefcase,
@@ -202,11 +213,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section why-section" id="why-ebodhi">
+      <section className="section why-section below-hero-section" id="why-ebodhi">
         <div className="why-glow" aria-hidden="true" />
         <div className="why-grid-bg" aria-hidden="true" />
         <div className="container why-inner">
-          <div className="why-intro">
+          <Reveal className="why-intro" delay={0}>
             <span className="why-kicker">Built for builders</span>
             <h2>
               Why Learners Choose <em>eBodhi</em>
@@ -217,15 +228,16 @@ export default function Home() {
             <Link to="/programs" className="btn btn-primary why-cta">
               Explore programs <ArrowRight size={16} />
             </Link>
-          </div>
+          </Reveal>
           <div className="why-features">
             {whyUs.map((item, i) => {
               const Icon = item.icon;
               return (
-                <article
+                <Reveal
                   key={item.title}
-                  className={`why-feature why-accent-${item.accent}`}
-                  style={{ '--i': i }}
+                  as="article"
+                  className={`reveal-card why-feature why-accent-${item.accent}`}
+                  delay={100 + i * 90}
                 >
                   <span className="why-index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                   <div className="why-icon">
@@ -235,7 +247,7 @@ export default function Home() {
                     <h3>{item.title}</h3>
                     <p>{item.text}</p>
                   </div>
-                </article>
+                </Reveal>
               );
             })}
           </div>
@@ -246,7 +258,7 @@ export default function Home() {
         <div className="programs-orb programs-orb-a" aria-hidden="true" />
         <div className="programs-orb programs-orb-b" aria-hidden="true" />
         <div className="container programs-inner">
-          <div className="programs-head">
+          <Reveal className="programs-head" delay={0}>
             <div>
               <span className="programs-kicker">Career tracks</span>
               <h2>Skill Development Programs</h2>
@@ -255,43 +267,27 @@ export default function Home() {
             <Link to="/programs" className="btn btn-primary programs-head-cta">
               View all courses <ArrowRight size={16} />
             </Link>
-          </div>
+          </Reveal>
 
-          <div className="programs-tabs" role="tablist" aria-label="Program categories">
-            {categories.map((c) => (
-              <button
-                key={c}
-                type="button"
-                role="tab"
-                aria-selected={activeTab === c}
-                className={`programs-tab ${activeTab === c ? 'active' : ''}`}
-                onClick={() => setActiveTab(c)}
-              >
-                {c}
-              </button>
+          <div className="programs-grid programs-grid-3">
+            {showcaseCourses.map((course, i) => (
+              <Reveal key={course._id} className="reveal-card" delay={80 + i * 70}>
+                <ProgramCard course={course} variant="showcase" />
+              </Reveal>
             ))}
           </div>
 
-          <div className="programs-grid">
-            {filtered.slice(0, 6).map((course, i) => (
-              <ProgramCard
-                key={course._id}
-                course={course}
-                variant="showcase"
-                featured={i === 0 && activeTab === 'All'}
-              />
-            ))}
-          </div>
-
-          {filtered.length === 0 && (
+          {showcaseCourses.length === 0 && (
             <p className="programs-empty">No programs in this category yet — try another track.</p>
           )}
 
-          <div className="programs-footer">
-            <Link to="/programs" className="btn btn-accent">
-              Browse full catalog <ArrowRight size={16} />
-            </Link>
-          </div>
+          <Reveal delay={40}>
+            <div className="programs-footer">
+              <Link to="/programs" className="btn btn-accent">
+                Browse All Courses <ArrowRight size={16} />
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -299,31 +295,36 @@ export default function Home() {
         <div className="domains-shine" aria-hidden="true" />
         <div className="domains-lines" aria-hidden="true" />
         <div className="container domains-inner">
-          <div className="domains-head">
+          <Reveal className="domains-head" delay={0}>
             <span className="domains-kicker">Pick your path</span>
             <h2>Explore Learning Domains</h2>
             <p>Find the track that matches your background — from campus projects to job-bootcamp intensity.</p>
-          </div>
+          </Reveal>
           <div className="domains-bento">
             {domains.map((d, i) => {
               const Icon = d.icon;
               return (
-                <Link
+                <Reveal
                   key={d.name}
-                  to={d.to}
-                  className={`domain-tile domain-tone-${d.tone} ${i === 0 ? 'is-lead' : ''}`}
-                  style={{ '--i': i }}
+                  className={`reveal-card domain-reveal${i === 0 ? ' is-lead' : ''}`}
+                  delay={60 + i * 70}
                 >
-                  <span className="domain-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                  <div className="domain-icon"><Icon size={20} strokeWidth={2.1} /></div>
-                  <div className="domain-copy">
-                    <h3>{d.name}</h3>
-                    <p>{d.blurb}</p>
-                  </div>
-                  <span className="domain-cta">
-                    See programs <ArrowRight size={16} />
-                  </span>
-                </Link>
+                  <Link
+                    to={d.to}
+                    className={`domain-tile domain-tone-${d.tone}${i === 0 ? ' is-lead' : ''}`}
+                    style={{ '--i': i }}
+                  >
+                    <span className="domain-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                    <div className="domain-icon"><Icon size={20} strokeWidth={2.1} /></div>
+                    <div className="domain-copy">
+                      <h3>{d.name}</h3>
+                      <p>{d.blurb}</p>
+                    </div>
+                    <span className="domain-cta">
+                      See programs <ArrowRight size={16} />
+                    </span>
+                  </Link>
+                </Reveal>
               );
             })}
           </div>
@@ -333,25 +334,23 @@ export default function Home() {
       <section className="section impact-section" id="impact">
         <div className="impact-glow" aria-hidden="true" />
         <div className="container impact-inner">
-          <div className="impact-head">
+          <Reveal className="impact-head" delay={0}>
             <span className="impact-kicker">Proof in numbers</span>
             <h2>Our Impact Numbers</h2>
             <p>Join a growing community of career aspirants across Rajasthan and beyond.</p>
-          </div>
+          </Reveal>
           <div className="impact-grid">
             {impactItems.map((s, i) => {
               const Icon = impactIcons[s.key] || Users;
               return (
-                <article
-                  key={s.key}
-                  className="impact-card"
-                  style={{ '--i': i }}
-                >
-                  <div className="impact-icon"><Icon size={22} strokeWidth={2.1} /></div>
-                  <CountUp value={s.value} duration={1500 + i * 120} />
-                  <h3>{s.label}</h3>
-                  {s.description && <p>{s.description}</p>}
-                </article>
+                <Reveal key={s.key} className="reveal-card" delay={80 + i * 80}>
+                  <article className="impact-card" style={{ '--i': i }}>
+                    <div className="impact-icon"><Icon size={22} strokeWidth={2.1} /></div>
+                    <CountUp value={s.value} duration={1500 + i * 120} />
+                    <h3>{s.label}</h3>
+                    {s.description && <p>{s.description}</p>}
+                  </article>
+                </Reveal>
               );
             })}
           </div>
@@ -361,19 +360,21 @@ export default function Home() {
       <section className="section stories-section" id="stories">
         <div className="stories-bg" aria-hidden="true" />
         <div className="container stories-inner">
-          <div className="stories-head">
+          <Reveal className="stories-head" delay={0}>
             <span className="stories-kicker">Learner voices</span>
             <h2>What Learners Say</h2>
             <p>Tap a learner to hear their story — or let the reel play through.</p>
-          </div>
-          <StoriesSlider items={testimonials} />
+          </Reveal>
+          <Reveal delay={80}>
+            <StoriesSlider items={testimonials} />
+          </Reveal>
         </div>
       </section>
 
       <section className="section workshops-section" id="workshops">
         <div className="workshops-decor" aria-hidden="true" />
         <div className="container workshops-inner">
-          <div className="workshops-head">
+          <Reveal className="workshops-head" delay={0}>
             <div>
               <span className="workshops-kicker">
                 <Sparkles size={14} /> Live sessions
@@ -384,7 +385,7 @@ export default function Home() {
             <Link to="/workshops" className="btn btn-primary workshops-head-cta">
               View all workshops <ArrowRight size={16} />
             </Link>
-          </div>
+          </Reveal>
 
           {workshops.length > 0 ? (
             <div className="workshops-stack">
@@ -396,46 +397,47 @@ export default function Home() {
                 const weekday = valid ? date.toLocaleDateString('en-IN', { weekday: 'short' }) : '';
                 const isLead = i === 0;
                 return (
-                  <article
-                    key={m._id}
-                    className={`workshop-ticket ${isLead ? 'is-lead' : ''}`}
-                    style={{ '--i': i }}
-                  >
-                    <div className="workshop-ticket-date">
-                      <span className="workshop-weekday">{weekday || 'TBA'}</span>
-                      <span className="workshop-day">{day}</span>
-                      <span className="workshop-month">{month}</span>
-                    </div>
-                    <div className="workshop-ticket-media">
-                      <img
-                        src={m.imageUrl || 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&auto=format&fit=crop&q=60'}
-                        alt=""
-                      />
-                      {isLead && <span className="workshop-hot">Next up</span>}
-                    </div>
-                    <div className="workshop-ticket-body">
-                      <div className="workshop-ticket-tags">
-                        {m.domain && <span className="workshop-domain">{m.domain}</span>}
-                        {m.seats ? <span className="workshop-seats">{m.seats} seats</span> : null}
+                  <Reveal key={m._id} className="reveal-card" delay={60 + i * 90}>
+                    <article
+                      className={`workshop-ticket ${isLead ? 'is-lead' : ''}`}
+                      style={{ '--i': i }}
+                    >
+                      <div className="workshop-ticket-date">
+                        <span className="workshop-weekday">{weekday || 'TBA'}</span>
+                        <span className="workshop-day">{day}</span>
+                        <span className="workshop-month">{month}</span>
                       </div>
-                      <h3>{m.title}</h3>
-                      <p>{m.description}</p>
-                      <div className="workshop-meta">
-                        {m.mentor && (
-                          <span><User size={14} /> {m.mentor}</span>
-                        )}
-                        {valid && (
-                          <span>
-                            <Calendar size={14} />
-                            {date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                          </span>
-                        )}
+                      <div className="workshop-ticket-media">
+                        <img
+                          src={m.imageUrl || 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&auto=format&fit=crop&q=60'}
+                          alt=""
+                        />
+                        {isLead && <span className="workshop-hot">Next up</span>}
                       </div>
-                      <Link to="/workshops" className={`btn ${isLead ? 'btn-accent' : 'btn-primary'} btn-sm`}>
-                        Register Interest <ArrowRight size={14} />
-                      </Link>
-                    </div>
-                  </article>
+                      <div className="workshop-ticket-body">
+                        <div className="workshop-ticket-tags">
+                          {m.domain && <span className="workshop-domain">{m.domain}</span>}
+                          {m.seats ? <span className="workshop-seats">{m.seats} seats</span> : null}
+                        </div>
+                        <h3>{m.title}</h3>
+                        <p>{m.description}</p>
+                        <div className="workshop-meta">
+                          {m.mentor && (
+                            <span><User size={14} /> {m.mentor}</span>
+                          )}
+                          {valid && (
+                            <span>
+                              <Calendar size={14} />
+                              {date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </span>
+                          )}
+                        </div>
+                        <Link to="/workshops" className={`btn ${isLead ? 'btn-accent' : 'btn-primary'} btn-sm`}>
+                          Register Interest <ArrowRight size={14} />
+                        </Link>
+                      </div>
+                    </article>
+                  </Reveal>
                 );
               })}
             </div>
@@ -447,16 +449,18 @@ export default function Home() {
 
       <section className="section section-alt" id="callback">
         <div className="container">
-          <div className="callback-section">
-            <div>
-              <h2 style={{ marginBottom: 12 }}>Start your learning journey</h2>
-              <p style={{ color: 'rgba(255,255,255,.8)', marginBottom: 16 }}>
-                Tell us your college year or career goal — we&apos;ll recommend the right course or internship track.
-              </p>
-              <Link to="/practice" className="btn btn-ghost btn-sm">Try Practice Hub</Link>
+          <Reveal delay={0}>
+            <div className="callback-section">
+              <div>
+                <h2 style={{ marginBottom: 12 }}>Start your learning journey</h2>
+                <p style={{ color: 'rgba(255,255,255,.8)', marginBottom: 16 }}>
+                  Tell us your college year or career goal — we&apos;ll recommend the right course or internship track.
+                </p>
+                <Link to="/practice" className="btn btn-ghost btn-sm">Try Practice Hub</Link>
+              </div>
+              <CallbackForm courses={courses} dark />
             </div>
-            <CallbackForm courses={courses} dark />
-          </div>
+          </Reveal>
         </div>
       </section>
     </div>

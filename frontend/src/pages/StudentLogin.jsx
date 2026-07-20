@@ -20,7 +20,9 @@ export default function StudentLogin() {
       });
       localStorage.setItem('studentToken', data.token);
       localStorage.setItem('student', JSON.stringify(data.student));
-      navigate(location.state?.from || '/portal');
+      const params = new URLSearchParams(location.search);
+      const next = params.get('next') || location.state?.from || '/portal';
+      navigate(next);
     } catch (err) {
       setError(err.message);
     } finally {

@@ -1,22 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Clock, IndianRupee } from 'lucide-react';
+import CourseApplyButton from './CourseApplyButton';
+import CourseExplainerReel from './CourseExplainerReel';
 
-export default function ProgramCard({ course, variant = 'default', featured = false }) {
+export default function ProgramCard({
+  course,
+  variant = 'default',
+  featured = false,
+  applyStatus = null,
+  onApplyStatusChange,
+  hoverVideo = true
+}) {
   const isShowcase = variant === 'showcase';
+  const showExplainer = hoverVideo;
+  const [hovered, setHovered] = useState(false);
+
   const priceLabel = course.isFree || course.price === 0
     ? 'Free'
     : course.price?.toLocaleString('en-IN');
   const detailTo = `/programs/${course.slug}`;
 
   return (
-    <article className={`program-card ${isShowcase ? 'program-card-showcase' : ''} ${featured ? 'is-featured' : ''}`}>
+    <article
+      className={`program-card ${isShowcase ? 'program-card-showcase' : ''} ${showExplainer ? 'has-explainer' : ''} ${featured ? 'is-featured' : ''} ${hovered && showExplainer ? 'is-video-hover' : ''}`}
+      onMouseEnter={() => showExplainer && setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => showExplainer && setHovered(true)}
+      onBlur={() => setHovered(false)}
+    >
       <Link to={detailTo} className="program-media" aria-label={`View ${course.title}`}>
         <img
           src={course.imageUrl || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop&q=60'}
-          alt={course.title}
+          alt=""
         />
-        {isShowcase && <span className="program-cat">{course.category}</span>}
+        {showExplainer && <CourseExplainerReel course={course} active={hovered} />}
         {featured && <span className="program-badge">Popular</span>}
       </Link>
       <div className="program-body">
@@ -24,7 +42,7 @@ export default function ProgramCard({ course, variant = 'default', featured = fa
         <h3>
           <Link to={detailTo} className="program-title-link">{course.title}</Link>
         </h3>
-        <p>{course.description?.slice(0, 110)}{(course.description?.length || 0) > 110 ? '…' : ''}</p>
+        <p className="program-desc">{course.description?.slice(0, 110)}{(course.description?.length || 0) > 110 ? '…' : ''}</p>
         {course.highlights?.length > 0 && (
           <div className="chip-row">
             {course.highlights.slice(0, 3).map((h) => (
@@ -42,11 +60,16 @@ export default function ProgramCard({ course, variant = 'default', featured = fa
           </span>
           {course.avgSalary && <span className="meta-item">Avg {course.avgSalary}</span>}
         </div>
+        <p className="program-lms-note">Interactive LMS with lessons, Try it editor &amp; certificate</p>
         <div className="program-actions">
-          <Link to={detailTo} className="btn btn-primary btn-sm">
-            Learn More {isShowcase && <ArrowRight size={14} />}
+          <CourseApplyButton
+            course={course}
+            status={applyStatus}
+            onStatusChange={onApplyStatusChange}
+          />
+          <Link to={detailTo} className="btn btn-secondary btn-sm">
+            Details <ArrowRight size={14} />
           </Link>
-          <Link to={`/contact?course=${course.slug}`} className="btn btn-secondary btn-sm">Get Callback</Link>
         </div>
       </div>
     </article>

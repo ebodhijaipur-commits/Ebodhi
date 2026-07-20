@@ -25,7 +25,10 @@ router.get('/', async (req, res) => {
     if (featured === 'true') query.featured = true;
     if (category) query.category = category;
 
-    const courses = await Course.find(query).sort({ createdAt: -1 });
+    const courses = await Course.find(query)
+      .select('-chapters')
+      .sort({ createdAt: -1 })
+      .lean();
     res.json(courses);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -44,9 +47,9 @@ router.get('/:slug', async (req, res) => {
     };
     const slug = aliases[raw] || raw;
 
-    let course = await Course.findOne({ slug });
+    let course = await Course.findOne({ slug }).select('-chapters').lean();
     if (!course) {
-      course = await Course.findOne({ slug: raw });
+      course = await Course.findOne({ slug: raw }).select('-chapters').lean();
     }
     if (!course) {
       return res.status(404).json({ message: 'Course not found' });

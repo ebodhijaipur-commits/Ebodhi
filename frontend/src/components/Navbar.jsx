@@ -12,12 +12,6 @@ const courseLinks = [
   { title: 'App Development', desc: 'Android & iOS apps', to: '/programs?category=App%20Development' }
 ];
 
-const internshipLinks = [
-  { title: 'Summer Internship', desc: 'Industrial training for college students', to: '/internships' },
-  { title: 'Project Internship', desc: 'Guided capstones with mentors', to: '/internships#projects' },
-  { title: 'Campus Batches — Jaipur', desc: 'Classroom + lab exposure', to: '/campus' }
-];
-
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -80,12 +74,20 @@ export default function Navbar() {
               </Link>
             </li>
             <li className="mega-wrap" onMouseEnter={() => openMenu('courses')} onMouseLeave={scheduleClose}>
-              <button type="button" className="nav-drop-btn" onClick={() => setOpenMega(openMega === 'courses' ? null : 'courses')}>
+              <Link
+                to="/programs"
+                className={`nav-drop-btn ${location.pathname.startsWith('/programs') ? 'active' : ''}`}
+                onClick={() => setOpenMega(null)}
+              >
                 Courses <ChevronDown size={16} />
-              </button>
+              </Link>
               {openMega === 'courses' && (
                 <div className="mega-menu" onMouseEnter={() => openMenu('courses')} onMouseLeave={scheduleClose}>
                   <h4>Skill Development Programs</h4>
+                  <Link to="/programs" className="mega-item mega-item-all" onClick={() => setOpenMega(null)}>
+                    <strong>All Courses</strong>
+                    <span>Browse every LMS track</span>
+                  </Link>
                   {courseLinks.map((p) => (
                     <Link key={p.title} to={p.to} className="mega-item" onClick={() => setOpenMega(null)}>
                       <strong>{p.title}</strong>
@@ -95,23 +97,6 @@ export default function Navbar() {
                 </div>
               )}
             </li>
-            <li className="mega-wrap" onMouseEnter={() => openMenu('intern')} onMouseLeave={scheduleClose}>
-              <button type="button" className="nav-drop-btn" onClick={() => setOpenMega(openMega === 'intern' ? null : 'intern')}>
-                Internship Programs <ChevronDown size={16} />
-              </button>
-              {openMega === 'intern' && (
-                <div className="mega-menu" onMouseEnter={() => openMenu('intern')} onMouseLeave={scheduleClose}>
-                  <h4>Industrial Training</h4>
-                  {internshipLinks.map((p) => (
-                    <Link key={p.title} to={p.to} className="mega-item" onClick={() => setOpenMega(null)}>
-                      <strong>{p.title}</strong>
-                      <span>{p.desc}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </li>
-            <li><Link to="/workshops" className={`nav-link ${location.pathname === '/workshops' ? 'active' : ''}`}>Workshops</Link></li>
             <li><Link to="/about" className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}>About Us</Link></li>
             <li><Link to="/contact" className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`}>Contact Us</Link></li>
             {student ? (
@@ -143,8 +128,6 @@ export default function Navbar() {
         <div className={`mobile-drawer ${menuOpen ? 'open' : ''}`}>
           <Link to="/"><Home size={18} /> Home</Link>
           <Link to="/programs">Courses</Link>
-          <Link to="/internships">Internship Programs</Link>
-          <Link to="/workshops">Workshops</Link>
           <Link to="/about">About Us</Link>
           <Link to="/contact">Contact Us</Link>
           {student ? <Link to="/portal">My Portal</Link> : <Link to="/login">Login</Link>}

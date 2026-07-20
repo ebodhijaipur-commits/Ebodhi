@@ -21,9 +21,13 @@ import StudentLogin from './pages/StudentLogin';
 import StudentRegister from './pages/StudentRegister';
 import PortalDashboard from './pages/PortalDashboard';
 import PortalClassroom from './pages/PortalClassroom';
+import PortalChapter from './pages/PortalChapter';
+import PortalQuiz from './pages/PortalQuiz';
+import PortalCertificate from './pages/PortalCertificate';
 import PortalProfile from './pages/PortalProfile';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminLms from './pages/AdminLms';
 
 function LegacyCourseRedirect() {
   const { slug } = useParams();
@@ -62,9 +66,13 @@ export default function App() {
               <Route path="/register" element={<StudentRegister />} />
               <Route path="/portal" element={<StudentAuth><PortalDashboard /></StudentAuth>} />
               <Route path="/portal/courses/:slug" element={<StudentAuth><PortalClassroom /></StudentAuth>} />
+              <Route path="/portal/courses/:slug/chapters/:chapterId" element={<StudentAuth><PortalChapter /></StudentAuth>} />
+              <Route path="/portal/courses/:slug/chapters/:chapterId/quiz" element={<StudentAuth><PortalQuiz /></StudentAuth>} />
+              <Route path="/portal/courses/:slug/certificate" element={<StudentAuth><PortalCertificate /></StudentAuth>} />
               <Route path="/portal/profile" element={<StudentAuth><PortalProfile /></StudentAuth>} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/lms" element={<AdminLms />} />
             </Routes>
           </ErrorBoundary>
         </main>

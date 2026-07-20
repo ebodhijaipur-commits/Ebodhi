@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { apiFetch } from '../utils/api';
 
 export default function StudentRegister() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,8 @@ export default function StudentRegister() {
       });
       localStorage.setItem('studentToken', data.token);
       localStorage.setItem('student', JSON.stringify(data.student));
-      navigate('/portal');
+      const params = new URLSearchParams(location.search);
+      navigate(params.get('next') || '/programs');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -31,7 +33,7 @@ export default function StudentRegister() {
     <div className="auth-page">
       <div className="auth-card">
         <h1>Create Student Account</h1>
-        <p>Register to track enrollments once your counselor assigns a program.</p>
+        <p>Register, apply for a course LMS from the courses page, then wait for admin approval.</p>
         <form onSubmit={onSubmit}>
           <input placeholder="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
           <input type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />

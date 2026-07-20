@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { MapPin, Mail, Phone } from 'lucide-react';
+import { MapPin, Mail, Phone, Sparkles } from 'lucide-react';
 import CallbackForm from '../components/CallbackForm';
+import ContactHeroReel from '../components/ContactHeroReel';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 
 export default function ContactUs() {
@@ -25,13 +26,26 @@ export default function ContactUs() {
   }, [courseSlug]);
 
   return (
-    <div>
-      <section className="page-hero">
-        <div className="container">
-          <h1>Contact Us</h1>
-          <p>Have questions about programs, batches, or campus visits? We&apos;re here to help.</p>
+    <div className="contact-page">
+      <section className="contact-hero">
+        <div className="contact-hero-glow" aria-hidden="true" />
+        <div className="contact-hero-glow contact-hero-glow-b" aria-hidden="true" />
+        <div className="contact-hero-grid" aria-hidden="true" />
+        <div className="container contact-hero-inner">
+          <div className="contact-hero-intro">
+            <span className="contact-hero-kicker">
+              <Sparkles size={14} /> Contact Us
+            </span>
+            <h1>We&apos;re here to help</h1>
+            <p>
+              Send a message — we receive it, sort it to the right person, and get back with clear next steps.
+            </p>
+            <a href="#callback-form" className="btn btn-accent">Send an inquiry</a>
+          </div>
+          <ContactHeroReel />
         </div>
       </section>
+
       <section className="section">
         <div className="container two-col">
           <div>
@@ -46,7 +60,7 @@ export default function ContactUs() {
               <p style={{ color: 'var(--muted)', marginTop: 8 }}>Mon–Sat · 10:00 AM – 7:00 PM</p>
             </div>
           </div>
-          <div className="sticky-side">
+          <div className="sticky-side" id="callback-form">
             <h3 style={{ marginBottom: 12 }}>Send an inquiry</h3>
             <CallbackForm
               courses={courses}
