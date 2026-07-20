@@ -168,6 +168,11 @@ ul { list-style: none; }
   color: var(--navy);
   background: var(--sky);
 }
+.nav-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
 .nav-cta { margin-left: 8px; }
 .navbar .btn-ghost {
   color: var(--navy);
@@ -230,7 +235,9 @@ ul { list-style: none; }
 }
 .mobile-drawer.open { display: block; }
 .mobile-drawer a, .mobile-drawer button {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
   text-align: left;
   color: var(--text);

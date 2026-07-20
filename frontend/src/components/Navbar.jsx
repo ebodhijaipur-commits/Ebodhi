@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ChevronDown, Menu, X, LayoutDashboard } from 'lucide-react';
+import { ChevronDown, Menu, X, LayoutDashboard, Home } from 'lucide-react';
 import PromoBanner from './PromoBanner';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 
@@ -68,6 +68,17 @@ export default function Navbar() {
           </Link>
 
           <ul className="nav-links">
+            <li>
+              <Link
+                to="/"
+                className={`nav-link nav-home ${location.pathname === '/' ? 'active' : ''}`}
+                aria-label="Home"
+                title="Home"
+              >
+                <Home size={18} strokeWidth={2.2} />
+                <span>Home</span>
+              </Link>
+            </li>
             <li className="mega-wrap" onMouseEnter={() => openMenu('courses')} onMouseLeave={scheduleClose}>
               <button type="button" className="nav-drop-btn" onClick={() => setOpenMega(openMega === 'courses' ? null : 'courses')}>
                 Courses <ChevronDown size={16} />
@@ -130,6 +141,7 @@ export default function Navbar() {
         </div>
 
         <div className={`mobile-drawer ${menuOpen ? 'open' : ''}`}>
+          <Link to="/"><Home size={18} /> Home</Link>
           <Link to="/programs">Courses</Link>
           <Link to="/internships">Internship Programs</Link>
           <Link to="/workshops">Workshops</Link>
