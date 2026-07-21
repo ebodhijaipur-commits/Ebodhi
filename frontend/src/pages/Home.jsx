@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Users, Trophy, Briefcase, ArrowRight, Code2, BarChart3, Star, Wrench, GraduationCap, Infinity, Rocket, MessageCircle, Calendar, User, Sparkles, Megaphone, Smartphone, LineChart
+  Users, Trophy, Briefcase, ArrowRight, Star, Wrench, GraduationCap, Infinity, Rocket, MessageCircle, Calendar, User, Sparkles
 } from 'lucide-react';
 import ProgramCard from '../components/ProgramCard';
 import CallbackForm from '../components/CallbackForm';
@@ -15,42 +15,12 @@ import { fallbackTestimonials, fallbackWorkshops } from '../data/fallbackContent
 const HERO_TITLE = 'Give your career a practical, GenAI-ready edge';
 const HERO_LEAD = 'Excel with expert guidance — Full Stack, Data Science with AI/ML, Digital Marketing, Data Analytics, and App Development with capstones and mentor support.';
 
-const domains = [
-  {
-    name: 'Full Stack',
-    blurb: 'Ship end-to-end apps with modern frontend, APIs, and databases.',
-    icon: Code2,
-    to: '/programs?category=Full%20Stack',
-    tone: 'amber'
-  },
-  {
-    name: 'Data Science with AI/ML',
-    blurb: 'From EDA to ML and GenAI workflows — projects that show real insight.',
-    icon: BarChart3,
-    to: '/programs?category=Data%20Science',
-    tone: 'sky'
-  },
-  {
-    name: 'Digital Marketing',
-    blurb: 'SEO, social, paid ads, and campaign projects recruiters can evaluate.',
-    icon: Megaphone,
-    to: '/programs?category=Digital%20Marketing',
-    tone: 'mint'
-  },
-  {
-    name: 'Data Analytics',
-    blurb: 'Excel, SQL, and dashboards that turn raw data into decisions.',
-    icon: LineChart,
-    to: '/programs?category=Data%20Analytics',
-    tone: 'violet'
-  },
-  {
-    name: 'App Development',
-    blurb: 'Android and iOS apps with modern UI, APIs, and store-ready builds.',
-    icon: Smartphone,
-    to: '/programs?category=App%20Development',
-    tone: 'coral'
-  }
+const domainCategoryOrder = [
+  'Full Stack',
+  'Data Science',
+  'Digital Marketing',
+  'Data Analytics',
+  'App Development'
 ];
 
 const whyUs = [
@@ -162,6 +132,9 @@ export default function Home() {
 
   const homeShowcaseCategories = ['Data Science', 'Full Stack', 'App Development'];
   const showcaseCourses = homeShowcaseCategories
+    .map((cat) => courses.find((c) => c.category === cat))
+    .filter(Boolean);
+  const domainCourses = domainCategoryOrder
     .map((cat) => courses.find((c) => c.category === cat))
     .filter(Boolean);
   const impactIcons = {
@@ -300,33 +273,12 @@ export default function Home() {
             <h2>Explore Learning Domains</h2>
             <p>Find the track that matches your background — from campus projects to job-bootcamp intensity.</p>
           </Reveal>
-          <div className="domains-bento">
-            {domains.map((d, i) => {
-              const Icon = d.icon;
-              return (
-                <Reveal
-                  key={d.name}
-                  className={`reveal-card domain-reveal${i === 0 ? ' is-lead' : ''}`}
-                  delay={60 + i * 70}
-                >
-                  <Link
-                    to={d.to}
-                    className={`domain-tile domain-tone-${d.tone}${i === 0 ? ' is-lead' : ''}`}
-                    style={{ '--i': i }}
-                  >
-                    <span className="domain-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                    <div className="domain-icon"><Icon size={20} strokeWidth={2.1} /></div>
-                    <div className="domain-copy">
-                      <h3>{d.name}</h3>
-                      <p>{d.blurb}</p>
-                    </div>
-                    <span className="domain-cta">
-                      See programs <ArrowRight size={16} />
-                    </span>
-                  </Link>
-                </Reveal>
-              );
-            })}
+          <div className="programs-grid programs-grid-domains">
+            {domainCourses.map((course, i) => (
+              <Reveal key={course._id || course.slug} className="reveal-card" delay={60 + i * 70}>
+                <ProgramCard course={course} variant="showcase" />
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>

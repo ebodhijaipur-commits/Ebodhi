@@ -881,6 +881,23 @@ ul { list-style: none; }
 .programs-grid-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+.programs-grid-domains {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (min-width: 961px) {
+  .programs-grid-domains {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .programs-grid-domains > .reveal-card {
+    grid-column: span 2;
+  }
+  .programs-grid-domains > .reveal-card:nth-child(4) {
+    grid-column: 2 / span 2;
+  }
+  .programs-grid-domains > .reveal-card:nth-child(5) {
+    grid-column: 4 / span 2;
+  }
+}
 .programs-grid > .reveal-card {
   min-height: 0;
 }
