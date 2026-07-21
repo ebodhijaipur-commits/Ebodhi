@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Users, Trophy, Briefcase, ArrowRight, Star, Wrench, GraduationCap, Infinity, Rocket, MessageCircle, Calendar, User, Sparkles
+  Users, Trophy, Briefcase, ArrowRight, Code2, BarChart3, Star, Wrench, GraduationCap, Infinity, Rocket, MessageCircle, Calendar, User, Sparkles, Megaphone, Smartphone, LineChart
 } from 'lucide-react';
-import ProgramCard from '../components/ProgramCard';
+import DomainTile from '../components/DomainTile';
 import CallbackForm from '../components/CallbackForm';
 import HeroBackground from '../components/HeroVisuals';
 import CountUp from '../components/CountUp';
@@ -15,12 +15,47 @@ import { fallbackTestimonials, fallbackWorkshops } from '../data/fallbackContent
 const HERO_TITLE = 'Give your career a practical, GenAI-ready edge';
 const HERO_LEAD = 'Excel with expert guidance — Full Stack, Data Science with AI/ML, Digital Marketing, Data Analytics, and App Development with capstones and mentor support.';
 
-const domainCategoryOrder = [
-  'Full Stack',
-  'Data Science',
-  'Digital Marketing',
-  'Data Analytics',
-  'App Development'
+const domains = [
+  {
+    name: 'Full Stack',
+    category: 'Full Stack',
+    blurb: 'Ship end-to-end apps with modern frontend, APIs, and databases.',
+    icon: Code2,
+    to: '/programs?category=Full%20Stack',
+    tone: 'amber'
+  },
+  {
+    name: 'Data Science with AI/ML',
+    category: 'Data Science',
+    blurb: 'From EDA to ML and GenAI workflows — projects that show real insight.',
+    icon: BarChart3,
+    to: '/programs?category=Data%20Science',
+    tone: 'sky'
+  },
+  {
+    name: 'Digital Marketing',
+    category: 'Digital Marketing',
+    blurb: 'SEO, social, paid ads, and campaign projects recruiters can evaluate.',
+    icon: Megaphone,
+    to: '/programs?category=Digital%20Marketing',
+    tone: 'mint'
+  },
+  {
+    name: 'Data Analytics',
+    category: 'Data Analytics',
+    blurb: 'Excel, SQL, and dashboards that turn raw data into decisions.',
+    icon: LineChart,
+    to: '/programs?category=Data%20Analytics',
+    tone: 'violet'
+  },
+  {
+    name: 'App Development',
+    category: 'App Development',
+    blurb: 'Android and iOS apps with modern UI, APIs, and store-ready builds.',
+    icon: Smartphone,
+    to: '/programs?category=App%20Development',
+    tone: 'coral'
+  }
 ];
 
 const whyUs = [
@@ -130,13 +165,6 @@ export default function Home() {
     };
   }, []);
 
-  const homeShowcaseCategories = ['Data Science', 'Full Stack', 'App Development'];
-  const showcaseCourses = homeShowcaseCategories
-    .map((cat) => courses.find((c) => c.category === cat))
-    .filter(Boolean);
-  const domainCourses = domainCategoryOrder
-    .map((cat) => courses.find((c) => c.category === cat))
-    .filter(Boolean);
   const impactIcons = {
     students_trained: Users,
     internships: Briefcase,
@@ -227,43 +255,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section programs-section" id="programs">
-        <div className="programs-orb programs-orb-a" aria-hidden="true" />
-        <div className="programs-orb programs-orb-b" aria-hidden="true" />
-        <div className="container programs-inner">
-          <Reveal className="programs-head" delay={0}>
-            <div>
-              <span className="programs-kicker">Career tracks</span>
-              <h2>Skill Development Programs</h2>
-              <p>Choose a track, build projects, and prepare for internships or junior roles.</p>
-            </div>
-            <Link to="/programs" className="btn btn-primary programs-head-cta">
-              View all courses <ArrowRight size={16} />
-            </Link>
-          </Reveal>
-
-          <div className="programs-grid programs-grid-3">
-            {showcaseCourses.map((course, i) => (
-              <Reveal key={course._id} className="reveal-card" delay={80 + i * 70}>
-                <ProgramCard course={course} variant="showcase" />
-              </Reveal>
-            ))}
-          </div>
-
-          {showcaseCourses.length === 0 && (
-            <p className="programs-empty">No programs in this category yet — try another track.</p>
-          )}
-
-          <Reveal delay={40}>
-            <div className="programs-footer">
-              <Link to="/programs" className="btn btn-accent">
-                Browse All Courses <ArrowRight size={16} />
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
       <section className="section domains-section" id="domains">
         <div className="domains-shine" aria-hidden="true" />
         <div className="domains-lines" aria-hidden="true" />
@@ -273,10 +264,18 @@ export default function Home() {
             <h2>Explore Learning Domains</h2>
             <p>Find the track that matches your background — from campus projects to job-bootcamp intensity.</p>
           </Reveal>
-          <div className="programs-grid programs-grid-domains">
-            {domainCourses.map((course, i) => (
-              <Reveal key={course._id || course.slug} className="reveal-card" delay={60 + i * 70}>
-                <ProgramCard course={course} variant="showcase" />
+          <div className="domains-bento">
+            {domains.map((d, i) => (
+              <Reveal
+                key={d.name}
+                className={`reveal-card domain-reveal${i === 0 ? ' is-lead' : ''}`}
+                delay={60 + i * 70}
+              >
+                <DomainTile
+                  domain={d}
+                  index={i}
+                  course={courses.find((c) => c.category === d.category)}
+                />
               </Reveal>
             ))}
           </div>

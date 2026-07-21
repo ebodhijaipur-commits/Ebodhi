@@ -1585,6 +1585,220 @@ ul { list-style: none; }
   height: 14px;
 }
 .domain-tile:hover .domain-cta svg { transform: translateX(4px); }
+
+/* Domain tile — course explainer reel on hover (keeps navy tile UI) */
+.domain-tile.has-explainer {
+  min-height: 148px;
+  transition:
+    transform .3s ease,
+    background .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease,
+    min-height .35s cubic-bezier(.22, 1, .36, 1);
+}
+.domain-tile.has-explainer.is-explainer-hover,
+.domain-tile.has-explainer:hover {
+  min-height: 320px;
+  z-index: 6;
+}
+.domain-tile-base {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  transition: opacity .28s ease, transform .28s ease;
+}
+.domain-tile.is-explainer-hover .domain-tile-base {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+}
+.domain-tile.is-explainer-hover .domain-num {
+  opacity: 0;
+}
+.domain-tile .program-explainer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: stretch;
+  padding: 10px;
+  transition: opacity .28s ease;
+}
+.domain-tile .program-explainer.is-on {
+  opacity: 1;
+}
+.domain-tile .program-explainer-stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  padding: 10px 12px 12px;
+  background: rgba(4, 13, 42, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+.domain-tile .program-explainer-chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+.domain-tile .program-explainer-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.95);
+  color: #06123a;
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.domain-tile .program-explainer-count {
+  font-size: .7rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+.domain-tile .program-explainer-scene {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 0;
+  animation: explainer-scene-in .45s cubic-bezier(.22, 1, .36, 1) both;
+}
+.domain-tile .program-explainer-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+  background: linear-gradient(145deg, #fbbf24, #f59e0b);
+  color: #06123a;
+  box-shadow: 0 8px 18px rgba(245, 158, 11, 0.35);
+  animation: explainer-icon-pop .5s cubic-bezier(.22, 1, .36, 1) both;
+}
+.domain-tile .program-explainer-icon svg {
+  width: 22px;
+  height: 22px;
+}
+.domain-tile .program-explainer-kicker {
+  margin: 0 0 3px;
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #fbbf24;
+}
+.domain-tile .program-explainer-title {
+  margin: 0 0 4px;
+  font-size: .95rem;
+  line-height: 1.2;
+  color: #fff;
+  font-weight: 750;
+}
+.domain-tile .program-explainer-blurb {
+  margin: 0 0 8px;
+  font-size: .74rem;
+  line-height: 1.35;
+  color: rgba(226, 232, 240, 0.88);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.domain-tile .program-explainer-points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  width: 100%;
+}
+.domain-tile .program-explainer-points li {
+  position: relative;
+  padding: 5px 8px 5px 18px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 600;
+  animation: explainer-point-in .4s cubic-bezier(.22, 1, .36, 1) both;
+  animation-delay: calc(0.1s + var(--i, 0) * 0.07s);
+}
+.domain-tile .program-explainer-points li::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  border-radius: 50%;
+  background: #f59e0b;
+}
+.domain-tile .program-explainer-bar {
+  margin-top: auto;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.domain-tile .program-explainer-bar span {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+.domain-tile .program-explainer-bar span.is-running {
+  animation: explainer-bar-fill var(--scene-ms, 2800ms) linear forwards;
+}
+.domain-tile .program-explainer-dots {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.domain-tile .program-explainer-dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  transition: width .25s ease, background .25s ease, border-radius .25s ease;
+}
+.domain-tile .program-explainer-dots i.is-on {
+  width: 14px;
+  border-radius: 999px;
+  background: #f59e0b;
+}
+@media (prefers-reduced-motion: reduce) {
+  .domain-tile.has-explainer.is-explainer-hover,
+  .domain-tile.has-explainer:hover {
+    min-height: 148px;
+  }
+  .domain-tile .program-explainer-scene,
+  .domain-tile .program-explainer-icon,
+  .domain-tile .program-explainer-points li {
+    animation: none !important;
+  }
+}
+
 @keyframes domains-rise {
   from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: translateY(0); }
