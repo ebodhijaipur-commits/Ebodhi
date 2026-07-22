@@ -34,7 +34,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; }
 
 body {
   font-family: var(--font-body);
@@ -1909,7 +1909,7 @@ ul { list-style: none; }
   opacity: 0;
 }
 .why-feature.reveal.is-in {
-  animation: home-reveal-card 1.05s cubic-bezier(.22, 1, .36, 1) both;
+  animation: home-reveal-card .55s cubic-bezier(.22, 1, .36, 1) both;
   animation-delay: var(--reveal-delay, 0ms);
 }
 .why-feature.reveal:nth-child(even).is-in {
@@ -3067,17 +3067,15 @@ ul { list-style: none; }
   }
 }
 
-/* Scroll / entry — clear float-up as sections enter while scrolling */
+/* Scroll / entry — light fade-up (no blur — keeps scroll smooth) */
 .reveal {
   opacity: 0;
-  transform: translateY(72px) scale(0.96);
-  filter: blur(6px);
+  transform: translate3d(0, 28px, 0);
   pointer-events: none;
-  will-change: opacity, transform, filter;
 }
 .reveal.is-in {
   pointer-events: auto;
-  animation: home-reveal 1.05s cubic-bezier(.22, 1, .36, 1) both;
+  animation: home-reveal .55s cubic-bezier(.22, 1, .36, 1) both;
   animation-delay: var(--reveal-delay, 0ms);
 }
 .reveal-card {
@@ -3094,71 +3092,47 @@ ul { list-style: none; }
   height: 100%;
 }
 @keyframes home-reveal {
-  0% {
+  from {
     opacity: 0;
-    transform: translateY(72px) scale(0.96);
-    filter: blur(6px);
+    transform: translate3d(0, 28px, 0);
   }
-  55% {
+  to {
     opacity: 1;
-    filter: blur(0);
-    transform: translateY(-10px) scale(1.01);
-  }
-  100% {
-    opacity: 1;
-    filter: none;
-    transform: translateY(0) scale(1);
+    transform: translate3d(0, 0, 0);
   }
 }
 @keyframes home-reveal-card {
-  0% {
+  from {
     opacity: 0;
-    transform: translateY(64px) translateX(-28px) scale(0.94);
-    filter: blur(5px);
+    transform: translate3d(-12px, 24px, 0);
   }
-  55% {
+  to {
     opacity: 1;
-    filter: blur(0);
-    transform: translateY(-8px) translateX(0) scale(1.02);
-  }
-  100% {
-    opacity: 1;
-    filter: none;
-    transform: translateY(0) translateX(0) scale(1);
+    transform: translate3d(0, 0, 0);
   }
 }
 @keyframes home-reveal-card-alt {
-  0% {
+  from {
     opacity: 0;
-    transform: translateY(64px) translateX(28px) scale(0.94);
-    filter: blur(5px);
+    transform: translate3d(12px, 24px, 0);
   }
-  55% {
+  to {
     opacity: 1;
-    filter: blur(0);
-    transform: translateY(-8px) translateX(0) scale(1.02);
-  }
-  100% {
-    opacity: 1;
-    filter: none;
-    transform: translateY(0) translateX(0) scale(1);
+    transform: translate3d(0, 0, 0);
   }
 }
 /* keep older names working for other pages */
 @keyframes reveal-float {
-  0% { opacity: 0; transform: translateY(48px); }
-  60% { opacity: 1; transform: translateY(-6px); }
-  100% { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translate3d(0, 24px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 @keyframes reveal-float-left {
-  0% { opacity: 0; transform: translateY(40px) translateX(-22px); }
-  60% { opacity: 1; transform: translateY(-5px) translateX(0); }
-  100% { opacity: 1; transform: translateY(0) translateX(0); }
+  from { opacity: 0; transform: translate3d(-14px, 20px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 @keyframes reveal-float-right {
-  0% { opacity: 0; transform: translateY(40px) translateX(22px); }
-  60% { opacity: 1; transform: translateY(-5px) translateX(0); }
-  100% { opacity: 1; transform: translateY(0) translateX(0); }
+  from { opacity: 0; transform: translate3d(14px, 20px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 .below-hero-section {
   position: relative;

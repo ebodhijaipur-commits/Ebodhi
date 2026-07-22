@@ -218,7 +218,7 @@ export default function Home() {
         <div className="why-glow" aria-hidden="true" />
         <div className="why-grid-bg" aria-hidden="true" />
         <div className="container why-inner">
-          <Reveal className="why-intro" delay={0}>
+          <Reveal className="why-intro" delay={0} once={false}>
             <span className="why-kicker">Built for builders</span>
             <h2>
               Why Learners Choose <em>eBodhi</em>
@@ -238,7 +238,8 @@ export default function Home() {
                   key={item.title}
                   as="article"
                   className={`reveal-card why-feature why-accent-${item.accent}`}
-                  delay={100 + i * 90}
+                  delay={40 + i * 50}
+                  once={false}
                 >
                   <span className="why-index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                   <div className="why-icon">
