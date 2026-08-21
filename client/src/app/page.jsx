@@ -8,7 +8,7 @@ const PROGRAMS = [
   {
     href: '/programs/school',
     img: '/images/program-school.svg',
-    alt: 'Open book with code symbols',
+    alt: 'School student waving beside a friendly robot',
     badge: 'AI Literacy Program',
     title: 'School Students',
     desc: 'Grades 3–12 journey from block coding to building real AI apps — 180 guided sessions across 5 pathways.',
@@ -17,7 +17,7 @@ const PROGRAMS = [
   {
     href: '/programs/college',
     img: '/images/program-college.svg',
-    alt: 'Laptop and graduation cap',
+    alt: 'College graduate holding a laptop',
     badge: 'Industry-Ready Skills',
     title: 'College Students',
     desc: 'Full-stack, data science, ML and more — placement-focused training that turns freshers into job-ready engineers.',
@@ -26,7 +26,7 @@ const PROGRAMS = [
   {
     href: '/programs/professionals',
     img: '/images/program-professionals.svg',
-    alt: 'Briefcase with AI chip',
+    alt: 'IT professional presenting a rising chart',
     badge: 'Career Upskilling',
     title: 'Working IT Professionals',
     desc: 'Weekend-friendly Generative AI training to automate workflows and stay ahead of the curve in your career.',
