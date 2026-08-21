@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import { getToken } from '@/lib/auth';
-import { categoryGradient, formatPrice, categoryImage } from '@/lib/constants';
+import { categoryGradient, formatPrice, courseImage } from '@/lib/constants';
 import { CURRICULUM, BANDS, BAND_BY_SLUG } from '@/lib/curriculum';
 import SessionAccordion from '@/components/SessionAccordion';
 
@@ -146,8 +146,8 @@ export default function CourseDetailPage() {
           <div className="sticky top-24 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-lift">
             <div className="relative h-36 overflow-hidden">
               <img
-                src={categoryImage(course.category)}
-                alt={`${course.category} illustration`}
+                src={courseImage(course)}
+                alt={`${course.title} illustration`}
                 className="h-full w-full object-cover"
               />
             </div>

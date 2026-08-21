@@ -29,6 +29,26 @@ export function categoryImage(name = '') {
   return CATEGORY_IMAGE[name] || '/images/courses/development.svg';
 }
 
+const COURSE_IMAGE = {
+  'ai-explorer-pathway-grades-3-4': '/images/pathways/explorer.svg',
+  'ai-learner-pathway-grades-5-6': '/images/pathways/learner.svg',
+  'ai-creator-pathway-grades-7-8': '/images/pathways/creator.svg',
+  'ai-innovator-pathway-grades-9-10': '/images/pathways/innovator.svg',
+  'ai-future-leader-pathway-grades-11-12': '/images/pathways/leader.svg',
+  'full-stack-web-development-bootcamp': '/images/courses/fullstack.svg',
+  'mobile-app-development-bootcamp': '/images/courses/mobile-app.svg',
+  'dsa-placement-preparation': '/images/courses/dsa.svg',
+  'python-for-data-science': '/images/courses/python-ds.svg',
+  'machine-learning-specialization': '/images/courses/machine-learning.svg',
+  'generative-ai-for-working-professionals': '/images/courses/generative-ai.svg',
+  'digital-marketing-mastery': '/images/courses/marketing.svg',
+};
+
+export function courseImage(course) {
+  if (!course) return categoryImage();
+  return COURSE_IMAGE[course.slug] || categoryImage(course.category);
+}
+
 const GRADIENTS = [
   'from-sky-500 to-blue-700',
   'from-violet-500 to-purple-700',

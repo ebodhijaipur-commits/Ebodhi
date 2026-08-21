@@ -44,7 +44,7 @@ const STATS = [
 const FEATURED_SLUGS = [
   'full-stack-web-development-bootcamp',
   'mobile-app-development-bootcamp',
-  'python-data-science-bootcamp',
+  'python-for-data-science',
 ];
 
 export default function HomePage() {

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { categoryImage } from '@/lib/constants';
+import { courseImage } from '@/lib/constants';
 
 const LEVEL_COLORS = {
   Beginner: 'bg-emerald-100 text-emerald-700',
@@ -15,8 +15,8 @@ export default function CourseCard({ course }) {
     >
       <div className="relative h-40 overflow-hidden">
         <img
-          src={categoryImage(course.category)}
-          alt={`${course.category} course illustration`}
+          src={courseImage(course)}
+          alt={`${course.title} illustration`}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <span className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold text-primary shadow-sm">

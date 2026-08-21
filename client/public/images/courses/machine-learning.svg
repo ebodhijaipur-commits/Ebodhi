@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 170" role="img" aria-label="Machine Learning Specialization">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#c026d3"/>
+    </linearGradient>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.4" fill="rgba(255,255,255,0.35)"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="170" fill="url(#bg)"/>
+  <rect width="400" height="170" fill="url(#dots)"/>
+  <circle cx="352" cy="18" r="56" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="42" cy="160" r="44" fill="rgba(255,255,255,0.10)"/>
+  <!-- head silhouette with neural network inside -->
+  <g transform="translate(178,88)">
+    <path d="M-52 62 L-52 6 C -52 -34 -24 -58 8 -58 C 44 -58 66 -32 66 2 C 66 10 62 16 54 18 L 40 22 L 40 44 C 40 54 32 62 22 62 Z" fill="#ffffff"/>
+    <!-- network -->
+    <g stroke="#a855f7" stroke-width="3">
+      <path d="M-26 -14 L-4 -28 M-26 -14 L-4 0 M-26 12 L-4 0 M-26 12 L-4 26 M-4 -28 L20 -12 M-4 0 L20 -12 M-4 0 L20 12 M-4 26 L20 12 M20 -12 L38 0 M20 12 L38 0"/>
+    </g>
+    <g fill="#7c3aed">
+      <circle cx="-26" cy="-14" r="6.5"/>
+      <circle cx="-26" cy="12" r="6.5"/>
+      <circle cx="-4" cy="-28" r="6.5"/>
+      <circle cx="-4" cy="0" r="6.5"/>
+      <circle cx="-4" cy="26" r="6.5"/>
+      <circle cx="20" cy="-12" r="6.5"/>
+      <circle cx="20" cy="12" r="6.5"/>
+    </g>
+    <circle cx="38" cy="0" r="8" fill="#fbbf24"/>
+  </g>
+  <!-- training data chips -->
+  <g transform="translate(310,60)">
+    <rect x="-30" y="-14" width="60" height="28" rx="14" fill="#ffffff" opacity="0.94"/>
+    <text x="0" y="5" text-anchor="middle" font-family="monospace" font-weight="bold" font-size="13" fill="#7e22ce">98.2%</text>
+  </g>
+  <g transform="translate(322,124)">
+    <rect x="-34" y="-14" width="68" height="28" rx="14" fill="#ffffff" opacity="0.85"/>
+    <text x="0" y="5" text-anchor="middle" font-family="monospace" font-weight="bold" font-size="13" fill="#7e22ce">epoch</text>
+  </g>
+  <g transform="translate(80,48)" font-family="monospace" font-weight="bold" font-size="19" fill="#ffffff" opacity="0.9">
+    <text>y=f(x)</text>
+  </g>
+</svg>

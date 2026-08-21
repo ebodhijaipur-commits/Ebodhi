@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 170" role="img" aria-label="Mobile App Development">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ec4899"/>
+      <stop offset="1" stop-color="#f43f5e"/>
+    </linearGradient>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.4" fill="rgba(255,255,255,0.35)"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="170" fill="url(#bg)"/>
+  <rect width="400" height="170" fill="url(#dots)"/>
+  <circle cx="356" cy="18" r="56" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="40" cy="162" r="44" fill="rgba(255,255,255,0.10)"/>
+  <!-- giant phone centerpiece -->
+  <g transform="translate(200,88)">
+    <rect x="-52" y="-72" width="104" height="150" rx="18" fill="#ffffff"/>
+    <rect x="-42" y="-58" width="84" height="122" rx="8" fill="#fce7f3"/>
+    <rect x="-16" y="-66" width="32" height="5" rx="2.5" fill="#e5e7eb"/>
+    <rect x="-32" y="-46" width="64" height="26" rx="6" fill="#ec4899"/>
+    <rect x="-32" y="-12" width="30" height="30" rx="6" fill="#f9a8d4"/>
+    <rect x="2" y="-12" width="30" height="30" rx="6" fill="#fbcfe8"/>
+    <rect x="-32" y="24" width="64" height="10" rx="5" fill="#f472b6"/>
+    <rect x="-32" y="40" width="44" height="10" rx="5" fill="#f9a8d4"/>
+  </g>
+  <!-- floating app tiles -->
+  <g transform="translate(96,54)">
+    <rect x="-16" y="-16" width="32" height="32" rx="8" fill="#ffffff" opacity="0.92"/>
+    <path d="M-6 1 l4 4 l8 -8" stroke="#db2777" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  <g transform="translate(310,64)">
+    <circle cx="0" cy="0" r="15" fill="#ffffff" opacity="0.92"/>
+    <path d="M0 6 C -8 0 -6 -7 -1 -5 C 0 -4.6 0 -4.6 1 -5 C 6 -7 8 0 0 6 Z" fill="#e11d48"/>
+  </g>
+  <g transform="translate(96,124)" font-family="monospace" font-weight="bold" font-size="20" fill="#ffffff" opacity="0.9">
+    <text>4.9★</text>
+  </g>
+  <g transform="translate(316,124)" font-family="monospace" font-weight="bold" font-size="17" fill="#ffffff" opacity="0.85">
+    <text>ios+android</text>
+  </g>
+</svg>
