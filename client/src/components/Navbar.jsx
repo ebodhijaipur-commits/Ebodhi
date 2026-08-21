@@ -9,6 +9,8 @@ const LINKS = [
   { href: '/programs/college', label: 'College Students' },
   { href: '/programs/professionals', label: 'Professionals' },
   { href: '/courses', label: 'All Courses' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Navbar() {

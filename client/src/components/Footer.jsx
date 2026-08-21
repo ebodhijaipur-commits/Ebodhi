@@ -35,6 +35,16 @@ export default function Footer() {
                 Join for free
               </Link>
             </li>
+            <li>
+              <Link href="/about" className="hover:text-primary">
+                About us
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="hover:text-primary">
+                Contact us
+              </Link>
+            </li>
           </ul>
         </div>
 

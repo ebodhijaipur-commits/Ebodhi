@@ -30,6 +30,14 @@ router.get('/', async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(Number(limit) || 50);
 
+    if (audience === 'school') {
+      const gradeRank = (c) => {
+        const m = c.slug.match(/grades?-?(\d+)/);
+        return m ? Number(m[1]) : 99;
+      };
+      courses.sort((a, b) => gradeRank(a) - gradeRank(b));
+    }
+
     res.json({ courses });
   } catch (err) {
     res.status(500).json({ message: err.message });

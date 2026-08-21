@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import { categoryImage } from '@/lib/constants';
+import DemoModal from '@/components/DemoModal';
 
 const PATHWAY_IMAGES = [
   [/grades-3-4/, '/images/pathways/explorer.svg'],
@@ -80,7 +81,13 @@ export default function SchoolProgramPage() {
 
   useEffect(() => {
     api('/courses?audience=school')
-      .then((data) => setCourses(data.courses))
+      .then((data) => {
+        const gradeRank = (c) => {
+          const m = c.slug.match(/grades?-?(\d+)/);
+          return m ? Number(m[1]) : 99;
+        };
+        setCourses([...data.courses].sort((a, b) => gradeRank(a) - gradeRank(b)));
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -103,9 +110,10 @@ export default function SchoolProgramPage() {
             <Link href="/courses?audience=school" className="rounded-full bg-white px-7 py-3 text-sm font-bold text-orange-600 transition hover:bg-orange-50">
               Explore curriculum →
             </Link>
-            <a href="mailto:info@ebodhi.in?subject=Schedule%20a%20Demo" className="rounded-full border-2 border-white/70 px-7 py-3 text-sm font-bold transition hover:bg-white/10">
-              Request a demo
-            </a>
+            <DemoModal
+              label="Request a demo"
+              className="rounded-full border-2 border-white/70 px-7 py-3 text-sm font-bold transition hover:bg-white/10"
+            />
           </div>
         </div>
       </section>
@@ -261,9 +269,10 @@ export default function SchoolProgramPage() {
             student showcases.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <a href="mailto:info@ebodhi.in?subject=Schedule%20a%20Demo" className="rounded-full bg-white px-7 py-3 text-sm font-bold text-orange-600 hover:bg-orange-50">
-              Schedule a demo
-            </a>
+            <DemoModal
+              label="Schedule a demo"
+              className="rounded-full bg-white px-7 py-3 text-sm font-bold text-orange-600 hover:bg-orange-50"
+            />
             <Link href="/courses?audience=school" className="rounded-full border-2 border-white/70 px-7 py-3 text-sm font-bold hover:bg-white/10">
               Browse school courses
             </Link>
