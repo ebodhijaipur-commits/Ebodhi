@@ -16,6 +16,19 @@ const CATEGORY_EMOJI = {
   'AI Literacy': '🤖',
 };
 
+const CATEGORY_IMAGE = {
+  'AI Literacy': '/images/courses/ai-literacy.svg',
+  Development: '/images/courses/development.svg',
+  'Data Science': '/images/courses/data-science.svg',
+  Cloud: '/images/courses/cloud.svg',
+  Design: '/images/courses/design.svg',
+  Marketing: '/images/courses/marketing.svg',
+};
+
+export function categoryImage(name = '') {
+  return CATEGORY_IMAGE[name] || '/images/courses/development.svg';
+}
+
 const GRADIENTS = [
   'from-sky-500 to-blue-700',
   'from-violet-500 to-purple-700',

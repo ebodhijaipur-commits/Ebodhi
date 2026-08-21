@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 170" role="img" aria-label="Development">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.4" fill="rgba(255,255,255,0.35)"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="170" fill="url(#bg)"/>
+  <rect width="400" height="170" fill="url(#dots)"/>
+  <circle cx="48" cy="14" r="60" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="366" cy="160" r="50" fill="rgba(255,255,255,0.10)"/>
+  <ellipse cx="176" cy="156" rx="52" ry="7" fill="rgba(15,23,42,0.20)"/>
+  <!-- developer behind laptop -->
+  <g transform="translate(176,104)">
+    <path d="M-28 -27 Q -38 -12 -35 4" stroke="#fcd9b8" stroke-width="11" stroke-linecap="round" fill="none"/>
+    <path d="M28 -27 Q 38 -12 35 4" stroke="#fcd9b8" stroke-width="11" stroke-linecap="round" fill="none"/>
+    <path d="M-21 -40 h42 a9 9 0 0 1 9 9 v29 a9 9 0 0 1 -9 9 h-42 a9 9 0 0 1 -9 -9 v-29 a9 9 0 0 1 9 -9 z" fill="#ffffff"/>
+    <circle cx="0" cy="-62" r="16.5" fill="#1c1917"/>
+    <circle cx="0" cy="-57" r="14" fill="#fcd9b8"/>
+    <circle cx="-5" cy="-58" r="1.8" fill="#1e293b"/>
+    <circle cx="5" cy="-58" r="1.8" fill="#1e293b"/>
+    <path d="M-4.5 -51 Q 0 -47.5 4.5 -51" stroke="#1e293b" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <!-- laptop back facing viewer -->
+    <rect x="-46" y="-8" width="92" height="56" rx="8" fill="#eef2ff"/>
+    <circle cx="0" cy="20" r="5" fill="#2563eb"/>
+    <path d="M-46 48 L46 48 L54 58 L-54 58 Z" fill="#dbeafe"/>
+  </g>
+  <g transform="translate(300,58)" font-family="monospace" font-weight="bold" font-size="26" fill="#ffffff" opacity="0.92">
+    <text>&lt;/&gt;</text>
+  </g>
+  <g transform="translate(322,116)" font-family="monospace" font-weight="bold" font-size="20" fill="#ffffff" opacity="0.85">
+    <text>()</text>
+  </g>
+  <g transform="translate(84,120)" font-family="monospace" font-weight="bold" font-size="20" fill="#ffffff" opacity="0.85">
+    <text>{ }</text>
+  </g>
+  <circle cx="330" cy="30" r="5" fill="rgba(255,255,255,0.75)"/>
+</svg>

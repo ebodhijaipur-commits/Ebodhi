@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { categoryImage } from '@/lib/constants';
 
 const LEVEL_COLORS = {
   Beginner: 'bg-emerald-100 text-emerald-700',
@@ -12,11 +13,12 @@ export default function CourseCard({ course }) {
       href={`/courses/${course.slug}`}
       className="card-lift group flex flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-soft"
     >
-      <div className="shine relative h-40 overflow-hidden bg-gradient-to-br from-primary via-indigo-500 to-purple-600">
-        <div className="dot-grid absolute inset-0 opacity-40" />
-        <span className="absolute inset-0 flex items-center justify-center text-6xl transition-transform duration-500 group-hover:scale-125 group-hover:-rotate-6">
-          {course.emoji}
-        </span>
+      <div className="relative h-40 overflow-hidden">
+        <img
+          src={categoryImage(course.category)}
+          alt={`${course.category} course illustration`}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
         <span className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold text-primary shadow-sm">
           ₹{course.price.toLocaleString('en-IN')}
         </span>

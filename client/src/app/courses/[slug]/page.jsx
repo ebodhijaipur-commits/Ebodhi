@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import { getToken } from '@/lib/auth';
-import { categoryEmoji, categoryGradient, formatPrice } from '@/lib/constants';
+import { categoryGradient, formatPrice, categoryImage } from '@/lib/constants';
 import { CURRICULUM, BANDS, BAND_BY_SLUG } from '@/lib/curriculum';
 import SessionAccordion from '@/components/SessionAccordion';
 
@@ -144,13 +144,12 @@ export default function CourseDetailPage() {
 
           <aside>
           <div className="sticky top-24 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-lift">
-            <div
-              className={`relative flex h-36 items-center justify-center bg-gradient-to-br ${categoryGradient(
-                course.category
-              )}`}
-            >
-              <div className="dot-grid absolute inset-0 opacity-25" />
-              <span className="relative text-6xl transition-transform duration-500 hover:scale-110">{categoryEmoji(course.category)}</span>
+            <div className="relative h-36 overflow-hidden">
+              <img
+                src={categoryImage(course.category)}
+                alt={`${course.category} illustration`}
+                className="h-full w-full object-cover"
+              />
             </div>
             <div className="p-6">
               <div className="flex items-baseline gap-2">
