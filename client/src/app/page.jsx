@@ -7,30 +7,30 @@ import CourseCard from '../components/CourseCard';
 const PROGRAMS = [
   {
     href: '/programs/school',
-    emoji: '🎒',
+    img: '/images/program-school.svg',
+    alt: 'Open book with code symbols',
     badge: 'AI Literacy Program',
     title: 'School Students',
     desc: 'Grades 3–12 journey from block coding to building real AI apps — 180 guided sessions across 5 pathways.',
     points: ['No prior coding needed', 'Project-based learning', 'Certificates per level'],
-    gradient: 'from-sky-500 via-cyan-500 to-teal-400',
   },
   {
     href: '/programs/college',
-    emoji: '🎓',
+    img: '/images/program-college.svg',
+    alt: 'Laptop and graduation cap',
     badge: 'Industry-Ready Skills',
     title: 'College Students',
     desc: 'Full-stack, data science, ML and more — placement-focused training that turns freshers into job-ready engineers.',
     points: ['Interview preparation', 'Real capstone projects', 'Placement assistance'],
-    gradient: 'from-primary via-indigo-500 to-purple-600',
   },
   {
     href: '/programs/professionals',
-    emoji: '💼',
+    img: '/images/program-professionals.svg',
+    alt: 'Briefcase with AI chip',
     badge: 'Career Upskilling',
     title: 'Working IT Professionals',
     desc: 'Weekend-friendly Generative AI training to automate workflows and stay ahead of the curve in your career.',
     points: ['Live weekend batches', 'Hands-on AI tooling', 'Led by industry mentors'],
-    gradient: 'from-orange-500 via-rose-500 to-pink-500',
   },
 ];
 
@@ -128,28 +128,33 @@ export default function HomePage() {
               <Link
                 key={p.href}
                 href={p.href}
-                className="card-lift group relative flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white p-7 shadow-soft"
+                className="card-lift group relative flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-soft"
               >
-                <div className={`shine absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r ${p.gradient}`} />
-                <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${p.gradient} text-3xl shadow-lg transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110`}>
-                  {p.emoji}
+                <div className="relative h-36 overflow-hidden">
+                  <img
+                    src={p.img}
+                    alt={p.alt}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
-                <span className="mt-5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-primary">{p.badge}</span>
-                <h3 className="mt-1.5 font-display text-xl font-bold text-slate-900">{p.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-500">{p.desc}</p>
-                <ul className="mt-4 space-y-2">
-                  {p.points.map((pt) => (
-                    <li key={pt} className="flex items-center gap-2 text-sm text-slate-600">
-                      <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-emerald-500">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
-                      </svg>
-                      {pt}
-                    </li>
-                  ))}
-                </ul>
-                <span className="mt-auto inline-flex items-center gap-1 pt-6 text-sm font-bold text-primary transition-transform duration-300 group-hover:translate-x-1">
-                  Explore program →
-                </span>
+                <div className="flex flex-1 flex-col p-7 pt-5">
+                  <span className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-primary">{p.badge}</span>
+                  <h3 className="mt-1.5 font-display text-xl font-bold text-slate-900">{p.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-500">{p.desc}</p>
+                  <ul className="mt-4 space-y-2">
+                    {p.points.map((pt) => (
+                      <li key={pt} className="flex items-center gap-2 text-sm text-slate-600">
+                        <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-emerald-500">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+                        </svg>
+                        {pt}
+                      </li>
+                    ))}
+                  </ul>
+                  <span className="mt-auto inline-flex items-center gap-1 pt-6 text-sm font-bold text-primary transition-transform duration-300 group-hover:translate-x-1">
+                    Explore program →
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
