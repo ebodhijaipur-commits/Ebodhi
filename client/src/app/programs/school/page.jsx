@@ -5,6 +5,19 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import { categoryImage } from '@/lib/constants';
 
+const PATHWAY_IMAGES = [
+  [/grades-3-4/, '/images/pathways/explorer.svg'],
+  [/grades-5-6/, '/images/pathways/learner.svg'],
+  [/grades-7-8/, '/images/pathways/creator.svg'],
+  [/grades-9-10/, '/images/pathways/innovator.svg'],
+  [/grades-11-12/, '/images/pathways/leader.svg'],
+];
+
+function pathwayImage(slug = '') {
+  const hit = PATHWAY_IMAGES.find(([re]) => re.test(slug));
+  return hit ? hit[1] : categoryImage('AI Literacy');
+}
+
 const JOURNEY = [
   {
     band: 'Grades 3–4',
@@ -131,8 +144,8 @@ export default function SchoolProgramPage() {
                 >
                   <div className="relative h-28 overflow-hidden">
                     <img
-                      src={categoryImage(c.category)}
-                      alt={`${c.category} illustration`}
+                      src={pathwayImage(c.slug)}
+                      alt={`${c.title} illustration`}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
