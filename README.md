@@ -97,7 +97,7 @@ npm run dev
    - In MongoDB Atlas → Network Access, allow `0.0.0.0/0` so Render can connect
 
 3. **Frontend on Netlify** (https://app.netlify.com → Add new site → Import from Git)
-   - Pick the repo — `client/netlify.toml` already sets base/build/publish
+   - Pick the repo — the root `netlify.toml` already sets base/build/publish
    - Add environment variable `NEXT_PUBLIC_API_URL` = `https://<your-api>.onrender.com/api`
    - Deploy
 
