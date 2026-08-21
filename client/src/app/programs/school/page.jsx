@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { api } from '@/lib/api';
-import { categoryEmoji, categoryGradient } from '@/lib/constants';
+import { categoryImage } from '@/lib/constants';
 
 const JOURNEY = [
   {
@@ -129,8 +129,12 @@ export default function SchoolProgramPage() {
                   href={`/courses/${c.slug}`}
                   className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 >
-                  <div className={`flex h-28 items-center justify-center bg-gradient-to-br ${categoryGradient(c.category)}`}>
-                    <span className="text-4xl">{categoryEmoji(c.category)}</span>
+                  <div className="relative h-28 overflow-hidden">
+                    <img
+                      src={categoryImage(c.category)}
+                      alt={`${c.category} illustration`}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                   </div>
                   <div className="p-5">
                     <span className="text-xs font-bold uppercase tracking-wide text-orange-600">
