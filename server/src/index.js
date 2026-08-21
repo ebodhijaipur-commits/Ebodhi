@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { connectDB } from './config/db.js';
+import { connectDB, getDbStatus } from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
 import courseRoutes from './routes/course.routes.js';
 import enrollmentRoutes from './routes/enrollment.routes.js';
@@ -13,6 +13,10 @@ app.use(express.json());
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', service: 'ebodhi-api' });
+});
+
+app.get('/api/health/db', (req, res) => {
+  res.json(getDbStatus());
 });
 
 app.use('/api/auth', authRoutes);
