@@ -1,0 +1,16 @@
+{
+  "name": "ebodhi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ebodhi - Coursera-style learning platform (Next.js + Express + MongoDB)",
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,green \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "install-all": "npm install && npm --prefix server install && npm --prefix client install",
+    "seed": "npm --prefix server run seed"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
