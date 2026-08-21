@@ -17,9 +17,9 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
-          <img src="/logo.svg" alt="Ebodhi" className="h-10 w-auto" />
+          <img src="/logo.svg" alt="Ebodhi" className="h-14 w-auto" />
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">

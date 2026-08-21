@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="border-t border-gray-200 bg-gray-50 text-gray-600">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-2">
-          <img src="/logo.svg" alt="Ebodhi" className="h-10 w-auto" />
+          <img src="/logo.svg" alt="Ebodhi" className="h-14 w-auto" />
           <p className="mt-4 max-w-md text-sm leading-relaxed text-gray-500">
             Ebodhi offers learning programs for kids of all ages and experience levels. Students
             are taught not just the fundamentals of coding, but also how to code in practical
