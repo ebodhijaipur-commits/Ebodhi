@@ -101,7 +101,7 @@ export default function SchoolProgramPage() {
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-10 text-center sm:grid-cols-4">
           {[
             ['3–12', 'Grades covered'],
-            ['10 yr', 'Learning journey'],
+            ['10 years', 'Learning journey'],
             ['36', 'Sessions every year'],
             ['1 / year', 'Capstone project'],
           ].map(([num, label]) => (

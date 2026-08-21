@@ -1,32 +1,27 @@
-'use client';
-
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
-const HIDDEN_PATHS = ['/login', '/register', '/dashboard'];
 
 export default function PreFooterCta() {
-  const pathname = usePathname();
-  if (HIDDEN_PATHS.includes(pathname)) return null;
-
   return (
-    <section className="bg-primary-light">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 py-14 text-center sm:flex-row sm:justify-between sm:text-left">
-        <div>
-          <h2 className="text-2xl font-extrabold text-gray-900">
-            Ready to start learning?
+    <section className="px-4 pb-16 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl border border-primary/10 bg-gradient-to-br from-primary-light via-white to-purple-50 px-8 py-12 text-center shadow-soft sm:px-14">
+        <div className="dot-grid pointer-events-none absolute inset-0 opacity-40" />
+        <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 animate-float rounded-full bg-primary/10 blur-2xl" />
+        <div className="pointer-events-none absolute -bottom-10 -right-10 h-44 w-44 animate-float-slow rounded-full bg-purple-400/15 blur-2xl" />
+        <div className="relative">
+          <h2 className="font-display text-2xl font-extrabold text-slate-900 sm:text-3xl">
+            Not sure where to start?
           </h2>
-          <p className="mt-1 text-sm text-gray-600">
-            Join thousands of learners building future-ready skills with Ebodhi.
+          <p className="mx-auto mt-3 max-w-lg text-slate-600">
+            Talk to our counsellors for a free career roadmap session — no strings attached.
           </p>
-        </div>
-        <div className="flex shrink-0 gap-3">
-          <Link href="/courses" className="btn-primary">
-            Browse courses
-          </Link>
-          <Link href="/register" className="btn-outline border-gray-400">
-            Join for free
-          </Link>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+            <a href="tel:+916376914651" className="btn-primary">
+              📞 Call +91 63769 14651
+            </a>
+            <Link href="/courses" className="btn-outline">
+              Explore courses
+            </Link>
+          </div>
         </div>
       </div>
     </section>
